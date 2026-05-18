@@ -1,3 +1,13 @@
+<h1 align="center">
+  <font color="#003366">Análisis de Mortalidad en Chihuahua</font>
+</h1>
+
+<p align="center">
+  <img src="images/chihuahua_azulote.png" width="600" alt="Gráfico de Mortalidad">
+  <br>
+  <em>"Un breve análisis a un gran terriotorio".</em>
+</p>
+
 # 🌎 Proyecto Demografia 🗺️
 El trabajo que se presenta a continuación constituye el proyecto final del curso de Demografía,  enfocandose en el análisis del estado de Chihuahua a nivel poblacional. 
 
@@ -21,13 +31,6 @@ Se hizo uso de:
 - 🗺️ INEGI (_base de datos_)
 - 📦 R / RStudio (_entorno de programación y ejecución_)
 - 📄 Quarto (_documentos dinámicos y visualización_)
-
-## 🗃️ Instrucciones para su uso
-
-*insertar las instrucciones jiji este es preliminar asi q no hay problema*
-
-
-
 
 ## 🧾 Informe Final 
 
