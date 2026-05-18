@@ -5,7 +5,7 @@
 <p align="center">
   <img src="images/chihuahua_azulote.png" width="600" alt="Gráfico de Mortalidad">
   <br>
-  <em>"Un breve análisis a un gran terriotorio".</em>
+  <em>"Un breve análisis a un gran territorio".</em>
 </p>
 
 # 🌎 Proyecto Demografia 🗺️
