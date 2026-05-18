@@ -1,0 +1,37 @@
+edad,total,sexo
+De 0 a 4 anios,107,hombre
+De 5 a 9 anios,51,hombre
+De 10 a 14 anios,231,hombre
+De 15 a 19 anios,3383,hombre
+De 20 a 24 anios,6590,hombre
+De 25 a 29 anios,7135,hombre
+De 30 a 34 anios,6805,hombre
+De 35 a 39 anios,5522,hombre
+De 40 a 44 anios,4051,hombre
+De 45 a 49 anios,2755,hombre
+De 50 a 54 anios,1730,hombre
+De 55 a 59 anios,1004,hombre
+De 60 a 64 anios,634,hombre
+De 65 a 69 anios,369,hombre
+De 70 a 74 anios,222,hombre
+De 75 a 79 anios,111,hombre
+De 80 a 84 anios,63,hombre
+85 y mas anios,75,hombre
+De 0 a 4 anios,80,mujer
+De 5 a 9 anios,40,mujer
+De 10 a 14 anios,102,mujer
+De 15 a 19 anios,455,mujer
+De 20 a 24 anios,764,mujer
+De 25 a 29 anios,710,mujer
+De 30 a 34 anios,616,mujer
+De 35 a 39 anios,517,mujer
+De 40 a 44 anios,376,mujer
+De 45 a 49 anios,273,mujer
+De 50 a 54 anios,175,mujer
+De 55 a 59 anios,94,mujer
+De 60 a 64 anios,66,mujer
+De 65 a 69 anios,55,mujer
+De 70 a 74 anios,32,mujer
+De 75 a 79 anios,26,mujer
+De 80 a 84 anios,10,mujer
+85 y mas anios,12,mujer
