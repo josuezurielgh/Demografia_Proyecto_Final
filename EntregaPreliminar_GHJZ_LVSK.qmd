@@ -272,8 +272,8 @@ ggplot(datos_enfermedad, aes(x = year, y = total, color = sexo, group = sexo)) +
   labs(
     title = "Evolución de Muertes por Enfermedad en Chihuahua",
     subtitle = "Comparativa histórica entre Hombres y Mujeres",
-    caption = paste0 ("Fuente: Elaboración propia\n", 
-                     "El procesamiento de los datos se puede ver a detalle en el documento Datos.csv"),
+    caption = paste0 ("Las muertes por enfermedades por sexo\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento Muertes_por_Enfermedad_edad_Chihuahua.csv"),
     x = "Año",
     y = "Total de Defunciones",
     color = "Sexo"
@@ -350,7 +350,7 @@ Una vez visto los principales factores que alteran la Mortalidad en la región, 
 
 ## \color{->} 2.1. Procesamiento de los datos
 
-Un censo es un recuento detallado de todos los individuos que componen una población, por lo que, es de vital importante para múltiples recursos demográficos; en particular, para una *Tabla de Vida*. En México, contamos con un organismo que dentro de otras funciones, se encarga de la recopilación y publicación de los datos censales, dicho esto, nos ayudaremos de los censos poblacionales hechos por el INEGI en 2010 y 2020, y los consultaremos desde su sitio oficial.
+Un censo es un recuento detallado de todos los individuos que componen una población, por lo que, es de vital importancia para múltiples recursos demográficos; en particular, para una *Tabla de Vida*. En México, contamos con un organismo que dentro de otras funciones, se encarga de la recopilación y publicación de los datos censales, dicho esto, nos ayudaremos de los censos poblacionales hechos por el INEGI en 2010 y 2020, y los consultaremos desde su sitio oficial.
 
 Mediante la consulta del INEGI, obtendremos los datos de población total por sexo y edad que vivian en Chihuahua a fecha del respectivo censo, estos datos aunque son de gran ayuda, tienen un pequeño error de captura al momento de la consulta, pues para parte de los individuos del recuento se tienen una clasificación de edad o sexo "*No especificada*", por lo que para evitar estos datos faltante se realiza un prorrateo por sexo de la siguiente forma: $$p_{\text{masculina total}} = P_{\text{masculina original}} + \omega_m \cdot p_{\text{no especificado}}$$ $$p_{\text{femenina total}} = P_{\text{femenina original}} + \omega_f \cdot p_{\text{no especificado}}$$
 
@@ -400,7 +400,7 @@ $$e_x = \frac{T_x}{l_x}$$
 
 El proceso de construcción de una tabla de vida puede parecer tedioso y poco comprensible, es por eso que con este diagrama de flujo buscamos ilustrarlo de una mejor manera:
 
-![](diagrama_tabla_vida.png){fig-align="center"}
+![](images/diagrama_tabla_vida.png){fig-align="center"}
 
 ## \color{->} 2.4 Tablas de vida en R
 
@@ -897,4 +897,3 @@ ggplot(dt_completo, aes(x = x, y = lx, color = Sexo)) +
 
 Luego del análisis exhaustivo de la mortalidad en Chihuahua durante el periodo 2008-2023, podemos confirmar que la dinámica demográfica de la entidad se vió fuertemente condicionada por una convergencia crítica entre el perfil epidemiológico tradicional y factores externos de violencia que asotaron la región. Se concluye que, mientras las enfermedades crónico-degenerativas y la irrupción de la pandemia por COVID-19 en 2020 elevaron la tasa de mortalidad de forma generalizada, el homicidio actuó como un elemento distorsionador que impactó selectivamente a la población masculina joven, particularmente en los periodos críticos de 2010 y 2020. Esta disparidad de la mortalidad entre los géneros en las causas externas explica por qué la esperanza de vida masculina presenta una mayor vulnerabilidad y fluctuación ante crisis de seguridad, a diferencia de la femenina, que mantiene una tendencia más estable y resiliente hacia edades avanzadas, consolidando así un escenario donde el entorno fronterizo y la salud pública dictan de manera conjunta los riesgos de supervivencia en Chihuahua.
 
-# setwd("C:/Users/DELL/Documents/Demografia 2026-1/Proyecto_Chihuahua_2026_1")
