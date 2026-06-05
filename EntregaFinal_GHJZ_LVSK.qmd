@@ -1,0 +1,1392 @@
+---
+title: " "
+author:
+  - "Gonzalez Hernandez Josué Zuriel"
+  - "Lopez Villegas Saori Kinari"
+format:
+  pdf:
+    papersize: letter
+    geometry:
+      - top=3cm
+      - bottom=2.5cm
+      - left=2.5cm
+      - right=2.5cm
+    include-in-header:
+      text: |
+        \usepackage{graphicx}
+        \usepackage{xcolor}
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhf{}
+        \fancyhead[L]{\includegraphics[height=1cm]{images/chihuahua_azulote.png}}
+        \fancyhead[R]{\small\sffamily\itshape Demografia 9219 | GHJZ \& LVSK}
+        \renewcommand{\headrulewidth}{0.4pt}
+        \makeatletter
+        \makeatother
+editor: visual
+---
+
+![](images/chihuahua-01.jpg) \definecolor{->}{HTML}{00406d}
+
+# \color{->} 1. Comportamiento de la Mortalidad en Chihuahua ![](images/mortalidad.png){height="1.5em"}
+
+Cada uno de los 32 estados de la República Mexicana tiene diversas caracterisitcas que los vuelve interesantes para el estudio y análisis de los indicadores demográficos de su territorio; así que el estado de Chihuahua, no es la excepción, ya que cuenta con ciertos factores que resaltan en como afectan en la mortalidad de su población.
+
+Chihuahua, famoso por su gran extensión territorial, su ubicación fronteriza con EE.UU. y su dinámica socioeconómica, presenta particularidades contrastantes con el resto del país. Consideramos que desde hace un tiempo, particularmente durante el periodo de tiempo que abarca 2010-2021,la mortalidad en la entidad se ha visto fuertemente influenciada por dos factores: las enfermedades (Tanto crónico-degenerativas, como el COVID-19) y la violencia.
+
+Esta afirmación es fácil de sostener ya que, generalmente en México, las enfermedades del corazón y la diabetes mellitus representan las principales causas de decesos en la población general, sumado al conocido contexto inseguridad principalmente en la zona norte del país. Sin embargo, para darle más peso y respaldo a la suposición planteada, haremos un análisis inicial de la mortalidad en Chihuahua, buscando patrones que nos lleven a resultados clave para el estudio de la mortalidad y su impacto en la población de este territorio.
+
+Para este primer análisis, nos basaremos completamente en los datos de Estadisticas de Defunciones Registradas (EDR) que se encuentran en el sitio oficial del INEGI, primero consideramos relevante el ver como cambia el número de muertes anuales dentro de nuestro periodo de tiempo fijo (Usaremos el periodo 2008-2023 para mejor visualización en los años extremos 2010 y 2021), en este caso graficaremos el número de muertes por año de registro y no de ocurrencia, esto por mayor facilidad y ya que este análisis solo es un esbozo en nuestro intento de comprender cual son los factores más influyentes:
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+
+library(ggplot2)
+library(data.table)
+
+# Cargamos los datos
+datos_edr <- fread("data/csv/EDR_Chihuahua_2008-2023.csv")
+
+
+# Verificamos que el orden de la leyenda para que sea estético (Hombres, Mujeres y luego el Total )
+datos_edr$tipo <- factor(datos_edr$tipo, levels = c("Hombres", "Mujeres", "Total"))
+
+# Graficamos las tres categorias para contrastar
+ggplot(datos_edr, aes(x = year, y = total, color = tipo, group = tipo)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_x_continuous(breaks = seq(min(datos_edr$year), max(datos_edr$year), by = 2)) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_color_manual(values = c("Hombres" = "#1f77b4", "Mujeres" = "#e377c2", "Total" = "#4d4d4d")) +
+  labs(
+    title = "Defunciones Registradas en Chihuahua",
+    subtitle = "Comparativa histórica por sexo y total",
+    caption = paste0("Defunciones registradas en Chihuahua en el periodo 2008-2023.\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento EDR_Chihuahua_2008-2023.csv"),
+    x = "Año",
+    y = "Defunciones registradas",
+    color = "Categoría"
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "gray30"),
+    plot.caption = element_text(size = 7, color = "grey40", face = "italic"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+Esta gráfica es una gran herramienta auxiliar ya que nos da mucha información que analizar. Lo primero a notar es que las tres lineas resultantes son muy semejantes, en particular el número de defunciones anuales de mujeres parecen ser un desplazamiento vertical hacia abajo del número de defunciones anuales masculinas(En general, la mayoria de muertes anuales en Chihuahua son de hombres), lo que indica que estas dos varibles tienen una relación, posiblemente lineal; en consecuencia a esto, la suma total de defunciones tiene una forma muy similar a las individuales obviamente con valores más pequeños. Otra cosa a notar es que en practicamente en todos los años, el número de defunciones crece (lo cual es de esperarse ya que la población también lo hace) a una "velocidad" baja a lo largo del tiempo el número, a excepción de un aumento bastante considerable en dos años 2010 y 2020.
+
+El hecho de que haya solo dos años con crecimiento tan abrupto en el número de muertes, nos indica que en esos años sucedió algo atipico, que en caso del 2020 favorece nuestra hipotésis de la pandemia ya que concuerda con el periodo. Sin embargo, para asegurarnos que los factores propuestos en verdad sean los principales que afectan a la población en Chihuahua, habría que hacer un análisis por separado de cada uno para ver si siguen la tendencia de crecimiento visto en las defunciones en genereal, y por ende expliquen dicho comportamiento en los años antes mencionados.
+
+## \color{->} 1.1 El impacto de homicidios en la mortalidad ![](images/armas.png){height="1.5em"}
+
+El caso de los homicidios anuales siempre ha sido una estadistica preocupantemente relevante en las EDR de México; sin embargo, durante un periodo corto de tiempo centrado en el año 2010, se convirtió en una estadistica aún más impactante. La lucha contra el crimen organizado durante esa época llevó a un punto inquietante al Gobierno de México y la población mexicana, en el intento de erradicar grupos criminales, gran parte de la estadistica de muertes por homicido se le atribuye a esta razón.
+
+Lo anterior resulta en un hecho más importante en nuestro análisis ya que, la violencia y ataques causados por esta lucha se vieron focalizados en la zona norte del país por su relación fronteriza con EE.UU. y su relación comercial entre grupos criminales de ambos territorios, según el diario Expansión MX "*A partir de 2007, la frecuencia de los homicidios se dispara para estas entidades federativas, acentuándose en el caso de Chihuahua*". Dichos actos llevaron a reconocidos actos violentos como lo es la masacre de Villas de Salvárcar, que dejo un saldo de homicidios de 16 personas de entre 16-20 años precisamente un 31 de enero de 2010.
+
+Por su parte, desde el año 2016, nuevamente el número de homicidios en el país se vió con importantes cambios. El aumento de homicidios en el país entre 2016 y 2020 fue impulsado principalmente por la fragmentación de los grandes carteles de droga, detonando en una violenta disputa por mercados locales de consumo y rutas de tráfico.Debido a que las razón en escencia fue la misma, la mayoría de dichos homicidios nuevamente se centraron en lugares como Ciudad Juarez en Chihuahua, llevando al Estado a su peor registro durante ese periodo de tiempo en 2020.
+
+A continuación, se hará una gráfica para plasmar los datos del INEGI en Estadísticas de Muerte Registradas (EDR), según por homicidos registrados en Chihuahua, casos registrados en los años del periodo 2008-2023 y por sexo (excluyendo No especificado).
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+
+library(ggplot2)
+
+# Leemos el archivo
+datos <- fread("data/csv/Muertes_por_Homicidia_Chihuahua.csv")
+# Graficamos
+ggplot(datos, aes(x = year, y = total, color = tipo, group = tipo)) +
+geom_line(linewidth = 1.2) +
+geom_point(size = 2.5) +
+# Configuramos el eje X para que muestre los años de 2 en 2 y se visualice mejor
+scale_x_continuous(breaks = seq(min(datos$year), max(datos$year), by = 2)) +
+# Asignamos colores para una mejor visualización
+scale_color_manual(values = c("mhh" = "#1f77b4", "mhm" = "#e377c2")) +
+labs(
+title = "Evolución Histórica de Homicidios en Chihuahua",
+subtitle = "Comparativa anual por sexo",
+caption = paste0("Evolución de muertes por homicidio en Chihuahua según casos registrados.\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento Muertes_por_Homicidia_Chihuahua.csv"),
+x = "Año",
+y = "Homicidios registrados",
+color = "Indicador"
+) +
+theme_minimal(base_size = 9) +
+theme(
+plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+plot.subtitle = element_text(size = 9, hjust = 0.5, color = "gray30"),
+plot.caption = element_text(size = 7, color = "grey40", face = "italic"),
+legend.position = "bottom",
+panel.grid.minor = element_blank()
+)
+```
+
+Como podemos apreciar, fue una buena idea separar los casos registrados por sexo, ya que podemos apreciar la gran diferencia que existe en homicidios con victimas masculinas y femeninas; incluso veremos que en los años con mayor número de homicidios en el caso de victimas masculinas la gráfica se ve disparada, y en el caso de victimas femeninas apenas se ve afectada o incluso no sigue una tendencia creciente. Esto último respercutirá en la esperanza de vida de los hombres, siguiendo esta línea, faltaría analizar como se concentra esta mortalidad por homicidios en las edades de la victima. A continuación, plasmaremos dichos datos en histogramas que tomaran periodos quinquenales (jutando también el periodo 0-1 y 1-4 para que cada clase tenga el mismo periodo de tiempo) siguiendo los datos consultados en el INEGI.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-subcap: 
+#|   - "Hombres"
+#|   - "Mujeres"
+#| layout-ncol: 2
+#| 
+library(ggplot2)
+library(dplyr)
+
+datos_edad <- fread("data/csv/Muertes_Homicidios_por_edad_Chihuahua.csv")
+datos_edad$edad <- factor(datos_edad$edad, levels = unique(datos_edad$edad))
+
+# Gráfica para Hombres
+datos_edad %>% 
+  filter(sexo == "hombre") %>% 
+  ggplot(aes(x = edad, y = total)) +
+  geom_col(fill = "#1f77b4", color = "white", alpha = 0.8) +
+  labs(
+    title = "Distribución de Muertes por Homicidio.",
+    subtitle = "Para Hombres en Chihuahua",
+    caption = paste0("Distribución de homicidios registrados en periodos quinquenales.\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento Muertes_Homicidios_por_edad_Chihuahua.csv"),
+    x = "Grupos de Edad",
+    y = "Total de Homicidios") +
+  theme_minimal(base_size = 9) +
+  theme(
+    plot.caption = element_text(size = 7, color = "grey40", face = "italic"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+
+# Gráfica para Mujeres
+datos_edad %>% 
+  filter(sexo == "mujer") %>% 
+  ggplot(aes(x = edad, y = total)) +
+  geom_col(fill = "#e377c2", color = "white", alpha = 0.8) +
+  labs(
+    title = "Distribución de Muertes por Homicidio.",
+    subtitle = "Para Mujeres en Chihuahua",
+    caption = paste0("Distribución de homicidios registrados en periodos quinquenales.\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento Muertes_Homicidios_por_edad_Chihuahua.csv"),
+    x = "Grupos de Edad", 
+    y = "Total de Homicidios") +
+  theme_minimal(base_size = 9) +
+  theme(
+    plot.caption = element_text(size = 7, color = "grey40", face = "italic"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+```
+
+En estas gráficas podemos apreciar que la forma en la que se distribuyen las edades de victimas por homicidio entre hombres y mujeres es muy parecida, enfatizamos que se parecen en forma; ya que, no podriamos decir que son muy parecidas en general porque las escalas del eje $y$ entre ambas gráficas es diferentes, esto por lo visto anteriormente entre la gran diferencia en cantidad de victimas por cada sexo. Dejando esto a un lado, es fácil ver que gran parte de las victimas por homicidio se concentran entre las edades 25 a 34 años para ambos sexos, también podemos notar que la proporción de mujeres fallecidas por homicidios de 0-14 años es mayor a la proporción de hombres que murireron por homicidio del mismo rango de edad. Todos estos factores contribuiran en la modificación de indicadores como la esperanza de vida y años-persona vividos que veremos más adelante y analizaremos al final de este documento.
+
+## \color{->} 1.2 El impacto de las enfermedades en la Mortalidad ![](images/virus.png){height="1.5em"}
+
+En el caso de la Mortalidad por Enfermedades en Chihuahua en el periodo 2008-2023, los datos muestran que en los años 2008 a 2019 existe un crecimiento poco importante; ya que, es de esperarse que la cantidad de muertes por cualquier causa persistente en el tiempo (como son las enfermedades) aumente, esto debido a que si la población va en crecimiento, también la cantidad de personas que mueren lo hara (al menos en condiciones normales). Sin embargo, donde si se tienen cambios considerables a analizar, es lo que sucede en el periodo a partir de 2020, pues en estos años se presenta un crecimiento que supera a la tendencia que se estaba siguiendo en el periodo antes mencionado.
+
+Es natural pensar que el suceso que causó tal aumento sea la llegada de la pandemia por *Covid-19*. Para verificar si esto es correcto analizaremos las Estadísticas de Defunciones registradas; esta vez, filtraremos los datos por las muertes registradas en Chihuahua en el periodo 2008-2023, por sexo, edad y tomando en cuenta como causa de muerte las 48 distintas enfermedades que contempla la lista mexcicana de enfermedades (En dicha lista esta (01) Enfermedades infecciosas intestinales, (02) Tuberculosis, (03) Otras enfermedades bacterianas, (04) Infecciones con modo de transmisión predominantemente sexual, (05) Otras enfermedades infecciosas y parasitarias y efectos tardíos de las enfermedades infecciosas y parasitarias, etc). Con estos datos notamos que el año con mayor número de defunciones por enfermedades fue el 2020, asi que buscaremos obtener las principales enfermedades dentro de las 48 definidas para ese año en particular, obteniendo la siguiente tabla: **Tabla 1:** Principales Causas de Enfermedad y Mortalidad por Sexo (2020)
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-pos: 'H' #| label: tbl-enfermedades #| tbl-cap: "Principales Enfermedades en la Mortalidad por Sexo (2020)"
+#| 
+library(kableExtra)
+library(dplyr)
+
+# Cargamos los datos de nuestro archivo
+datos <- fread("data/csv/Principales_Enfermedades.csv", check.names = FALSE)
+
+# Damos formato a los datos para visualizarlos mejor, como poner la proporcion en porcentaje
+datos_formateados <- datos %>%
+  mutate(
+    `No. Muertes` = format(`No. Muertes`, big.mark = ","),
+    `Proporcion de muertes de la enfermedad` = paste0(round(`Proporcion de muertes de la enfermedad` * 100, 1), "%"),
+    `Proporcion de muertes` = paste0(round(`Proporcion de muertes` * 100, 1), "%")
+  )
+
+# 4. Generar la tabla con kableExtra
+datos_formateados %>%
+  kbl(
+    align = "clllcll",
+    col.names = c("Año", "No. Muertes", "Sexo", "Enfermedad", "Ranking", "% Enfermedad", "% Total"),
+    format = "latex",    # Forzamos formato LaTeX explícito
+    table.env = "table"
+  ) %>%
+  kable_styling(
+    latex_options = c("striped", "scale_down", "HOLD_position"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 9
+  ) %>%
+  row_spec(0, bold = TRUE, color = "white", background = "#00406d") %>%
+  footnote(
+    general = "El procesamiento de los datos para esta tabla se puede ver a detalle en el documento Muertes_por_Enfermedad_Chihuahua.xlsx",
+    general_title = "Nota: ",
+    footnote_as_chunk = TRUE
+  )
+```
+
+En la columna "*Enfermedad*" de esta tabla podemos apreciar las tres enfermedades que más muertes provocaron para cada sexo, en la columna "*No. Muertes*" podemos ver el número de muertes que provocaron y en las últimas dos columnas podemos ver el pocentaje que dicha enfermedad representa en el número de muertes por enfermedad y el número de muertes general respectivamente.
+
+En la tabla vemos que tanto para hombres como mujeres en 2020, la principal categoría que derivo en muerte fue enfermedades viricas, lo que no nos asegura que todas o la mayoría sean por *Covid-19*; asi como no nos asegura que las muertes por otras enfermedades no hayan sido por complicaciones por *Covid-19* o por falta de atención médica por la cuarentena durante la pandemia, pero es algo que se puede inferir por tratarse de un valor atipico respecto a años anterirores. Por su parte, las enfermedades que toman el segundo y tercer puesto en la tabla son las mismas para hombres y mujeres siendo *Enfermedades isquemicas del corazón* y *Enfermedades endocrinas y metabolicas* respectivamente, estas dos suelen ocupar los primeros puestos en los periodos anteriores a 2020, pero así como el *Covid-19* desencadeno en otros padecimientos que luego causaron la muerte, las personas con este tipo de enfermedades se vieron más vulneradas que las personas sanas lo que explicaría en gran medida el porque tan solo las tres principales causas de muerte por enfermedad representen el $43.1\%$ del total de muertes en 2020 para hombres y el $47.6\%$ para mujeres. Ahora con esto en mente, visualicemos los datos de muertes en Chihuahua durante e periodo 2008-2023.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+library(ggplot2)
+
+# Leemos el documento
+datos_enfermedad <- fread("data/csv/Muertes_por_Enfermedad_Chihuahua.csv")
+
+
+# Graficamos tanto para hombres como mujeres para ver el contraste
+ggplot(datos_enfermedad, aes(x = year, y = total, color = sexo, group = sexo)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_x_continuous(breaks = seq(min(datos_enfermedad$year), max(datos_enfermedad$year), by = 2)) +
+  scale_color_manual(values = c("Hombres" = "#00406d", "Mujeres" = "#e377c2")) +
+  labs(
+    title = "Evolución de Muertes por Enfermedad en Chihuahua",
+    subtitle = "Comparativa histórica entre Hombres y Mujeres",
+    caption = paste0 ("Las muertes por enfermedades por sexo\n", 
+                     "El procesamiento de los datos se puede ver a detalle en el documento Muertes_por_Enfermedad_edad_Chihuahua.csv"),
+    x = "Año",
+    y = "Total de Defunciones",
+    color = "Sexo"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "gray30"),
+    plot.caption = element_text(size = 7, color = "grey40", face = "italic"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+Lo primero destacable, es que a diferencia de la misma gráfica para *Evolución Histórica de Homicidios en Chihuahua*, las gráficas para hombre y para mujer se parecen muchisimo más entre si, siendo practicamente un desplazamiento hacia arriba la gráfica para hombres de la de mujeres. Esto, explicaría el gran parecido entre las gráficas de hombre y mujer en la gráfica *Defunciones Registradas en Chihuahua*, ya que si las gráficas de muertes registradas por enfermedad se parecen mucho, y dicha causa de muerte es la más común con diferencia en la población, entonces las gráficas de muertes registradas en total también seran parecidas entre si, y las variaciones que haya entre ambas gráficas seran totalmente dependientes a las otras causas de muerte como homicido; es por eso, que si vemos otra vez la gráfica de *Defunciones Registradas en Chihuahua*, donde existe mayor diferencia en la forma de gráficas entre sexos es en el año 2010, precisamente, el año en que mayor diferencia hay entre las gráficas de sexo de *Evolución Histórica de Homicidios en Chihuahua*.
+
+Por otro lado, como ya se habia mencionado, logramos ver que antes de 2020 la tendencia se había mantenido a un crecimiento muy lineal, pero teniendo en cuenta un crecimiento tan irregular en 2020 y que la razón principal hayan sido enfermedades viricas, se entiende el impactante factor que se volvio el *Covid-19* y como esto repercutirá en la esperanza de vida.
+
+Finalmente, como en el caso de muertes registradas por homicidio, generaremos histogramas para ver como se distribuyen la muertes por enfermedad por edades en el periodo seleccionado.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-subcap: 
+#|   - "Hombres"
+#|   - "Mujeres"
+#| layout-ncol: 2
+
+# 1. Cargar librerías necesarias
+library(ggplot2)
+library(dplyr)
+
+# Leemos los datos obtenidos de INEGI
+datos_enfermedad_edad <- fread("data/csv/Muertes_por_Enfermedad_edad_Chihuahua.csv")
+datos_enfermedad_edad$edad <- factor(datos_enfermedad_edad$edad, levels = unique(datos_enfermedad_edad$edad))
+
+# Histograma para Hombres
+datos_enfermedad_edad %>% 
+  filter(sexo == "Hombres") %>% 
+  ggplot(aes(x = edad, y = total)) +
+  geom_col(fill = "#00406d", color = "white", alpha = 0.85) +
+  labs(
+    x = "Grupos de Edad", 
+    y = "Total de Defunciones"
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+
+# Histograma para Mujeres
+datos_enfermedad_edad %>% 
+  filter(sexo == "Mujeres") %>% 
+  ggplot(aes(x = edad, y = total)) +
+  geom_col(fill = "#e377c2", color = "white", alpha = 0.85) +
+  labs(
+    x = "Grupos de Edad", 
+    y = "Defunciones por enfermedad"
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Nuevamente, existe cierto parecido en la forma de los histogramas, pero esta vez también se parecen en dimensiones, ya que si bien existe diferencia en el número de hombres y mujeres que mueren por enfermedad, no es tan marcado como en la causa de muerte homicidios; por ende, contamos con la misma escala en los ejes $y$ pero sigue existiendo diferencia de magnitud. Podemos apreciar que en el caso de mujeres, seis grupos de edad superan las 10,000 defunciones, mientras que para hombre lo hacen ocho grupos de edad, para los primeros grupos de edad de cada sexo, vemos una cantidad considerablemnte grande pero esperada de muertes. Para los hombres, a partir de ahi, se sigue un crecimiento creciente a excepción del penúltimo grupo donde baja un poco para volver a subir en el último, lo cual se púede considerar un comportamiento normal, mientras que para las mujeres, el crecimiento hasta el penúltimo grupo es creciente pero más bajo que para los hombres, es hasta el último grupo donde hay un crecimiento bastante diferencial que incluso supera el de cualquier grupo de los hombres; pero es de esperarse ya que, si el porcentaje de población masculina y femenina es practicamente el mismo, no existe gran diferencia entre el número de muertes por enfermedad entre sexos y las enfermedades son la principal causa de muerte representando casi el mismo porcentaje para ambos sexos, la cantidad de defunciones por esta razón se debe ver compensada en algún punto (siendo el último grupo en las mujeres), pero esto se espera que repercuta positivamente en la esperanza de vida femenina.
+
+# \color{->} 2. Tablas de vida ![](images/corazon.png){height="1.5em"}
+
+Una vez visto los principales factores que alteran la Mortalidad en la región, buscaremos realizar las tablas de vida para los años 2010,2019 y 2020. Las tablas de vida son un recurso muy importante por su versatilidad y comodidad para plasmar una cantidad enorme de información en un solo medio; sin embargo, no son fáciles de interpretar por lo mismo, asi que en esta parte del trabajo explicaremos el proceso para obtener una tabla de vida, y analizaremos los aspectos más relevantes que estas contengan.
+
+## \color{->} 2.1. Procesamiento de los datos ![](images/archivo.png){height="1.5em"}
+
+Un censo es un recuento detallado de todos los individuos que componen una población, por lo que, es de vital importancia para múltiples recursos demográficos; en particular, para una *Tabla de Vida*. En México, contamos con un organismo que dentro de otras funciones, se encarga de la recopilación y publicación de los datos censales, dicho esto, nos ayudaremos de los censos poblacionales hechos por el INEGI en 2010 y 2020, y los consultaremos desde su sitio oficial.
+
+Mediante la consulta del INEGI, obtendremos los datos de población total por sexo y edad que vivian en Chihuahua a fecha del respectivo censo, estos datos aunque son de gran ayuda, tienen un pequeño error de captura al momento de la consulta, pues para parte de los individuos del recuento se tienen una clasificación de edad o sexo "*No especificada*", por lo que para evitar estos datos faltante se realiza un prorrateo por sexo de la siguiente forma: $$p_{\text{masculina total}} = P_{\text{masculina original}} + \omega_m \cdot p_{\text{no especificado}}$$ $$p_{\text{femenina total}} = P_{\text{femenina original}} + \omega_f \cdot p_{\text{no especificado}}$$
+
+Donde los términos $\omega$ corresponden a las proporciones de cada sexo:
+
+$$\omega_m = \frac{P_{\text{masculina original}}}{P_{\text{masculina original}} + P_{\text{femenina original}}}$$ Una vez obtenidos los datos de población total por sexo se busca obtener el valor de los años-persona vividos, que se interpretan como los años totales que contribuye una cohorte al total de años que se pueden vivir en un periodo determinado, para ello ocupamos dos cosas. Primero debemos obtener el valor que mide el tiempo que hubo entre los censos, pa esto debemos usar las fechas de los censos 2010 y 2020 y pasarlos a decimales mediante la fórmula: $$ Fecha=Año + \dfrac{(Mes-1)}{12}+\frac{Dia}{365} $$ Entonces obtenemos el valor absoluto de la diferencia de las fechas censales y lo llamamos $\Delta_t$, ahora calculamos las tasa $r$, con la siguiente fórmula: $$r = \frac{\ln\left(\frac{N_T}{N_0}\right)}{\Delta t}$$ Con estos datos, ahora podemos calcular los valores $APV$, usando la fórmula de crecimiento exponencial: $$ N(t)=N(0)\cdot exp(rt) $$ Pero modificandola como una proyección a mitad de año: $$ APV(T)=N(t)\cdot exp(\Delta_t\cdot(T-t)) $$ con $t$ la fecha del primer censo considerado y $T$ la mitad del año en el que se miden los $APV$. Para continuar con la construcción de las tablas de vida debemos nuevamente consultar la página oficial del INEGI en el apartado Estadísticas de Defunciones Registradas (EDR) para obtener el número de muertes totales para cada unos de los años (2010,2019,2021) por edad y sexo, pero esta vez buscamos las muertes por año de ocurrencia y no de registro. Una vez obtenidos los $_nAPV_x$ y $_nD_x$, solo queda hacer su cociente para tener las tasas especificas de mortalidad: $${}_nm_x=\dfrac{_nAPV_x}{_nD_x}$$ Estos valores ya se pueden usar para obtener una tabla de vida mediante el algoritmo usual. En nuestro caso la obtencion de los valores $_nm_x$ se puede ver a detalle en los archivos "*APV-R-Demografia-GHJZ-LVSK.xlsx*" y "*TasasMortalidad_Demografia_GHJZ-LVSK.xlsx*"
+
+## \color{->} 2.2 Fórmulas para la Tabla de Vida Abreviada ![](images/formula.png){height="1.5em"}
+
+La tabla de vida es un cuadro estadístico que estudia la mortalidad en una cohorte hipotética de $l_0 = 100,000$ nacidos vivos para observar su extinción gradual bajo las tasas de mortalidad calculadas ($_{n}m_x$). Las fórmulas que se ocupan para su construcción son:
+
+1.  **Probabilidad de muerte (**$_{n}q_x$): Traduce la tasa central de mortalidad en la probabilidad de que un individuo de edad exacta $x$ muera antes de cumplir $x+n$ años.
+
+$$_{n}q_x = \frac{n \cdot _{n}m_x}{1 + (n - _{n}a_x) \cdot _{n}m_x}$$
+
+*Nota:* $_{n}a_x$ representa los años promedio vividos por quienes fallecen en ese intervalo.
+
+2.  **Probabilidad de supervivencia (**$_{n}p_x$): El complemento de la probabilidad de morir.
+
+$$_{n}p_x = 1 - _{n}q_x$$
+
+3.  **Sobrevivientes (**$l_x$): Número de personas que logran llegar vivas a la edad exacta $x$.
+
+$$l_{x+n} = l_x \cdot _{n}p_x$$
+
+4.  **Defunciones teóricas (**$_{n}d_x$): Muertes esperadas dentro de la cohorte en el intervalo $(x, x+n)$.
+
+$$_{n}d_x = l_x - l_{x+n} = l_x \cdot _{n}q_x$$
+
+5.  **Años persona vividos en el intervalo (**$_{n}L_x$): Tiempo total acumulado por la cohorte entre las edades $x$ y $x+n$.
+
+$$_{n}L_x = (n \cdot l_{x+n}) + (_{n}a_x \cdot _{n}d_x)$$
+
+Para el último grupo abierto (edad avanzada $\omega$), se asume que todos mueren ahí, calculándose como:
+
+$$_{\infty}L_{\omega} = \frac{l_{\omega}}{_{\infty}m_{\omega}}$$
+
+6.  **Años persona vividos acumulados (**$T_x$): Tiempo total que le resta por vivir a la cohorte a partir de la edad $x$.
+
+$$T_x = \sum_{i=x}^{\omega} {}_{n}L_i$$
+
+7.  **Esperanza de vida (**$e_x$): El promedio de años que le restan por vivir a una persona que ha alcanzado la edad exacta $x$.
+
+$$e_x = \frac{T_x}{l_x}$$
+
+## \color{->} 2.3 Diagrama de flujo de la construcción de la Tabla de vida ![](images/diagrama.png){height="1.5em"}
+
+El proceso de construcción de una tabla de vida puede parecer tedioso y poco comprensible, es por eso que con este diagrama de flujo buscamos ilustrarlo de una mejor manera:
+
+![](images/diagrama_tabla_vida.png){fig-align="center"}
+
+## \color{->} 2.4 Tablas de vida en R ![](images/tablavida.png){height="1.5em"}
+
+A continuación se presentarán las tablas de vida hechas mediante $R$ para los años 2010, 2019 y 2021.
+
+**Código de función para hacer una tabla de vida**
+
+```{r}
+#| message: false
+#| warning: false
+#| 
+
+library(kableExtra)
+library(data.table)
+
+lt_abr <- function(x, mx, sex="f", IMR=NA){
+  
+  m <- length(x)
+  n <- c(diff(x), NA)  
+  
+  ax <- n/2    
+  
+  ## Coale y Demeny edades 0 a 1
+  if(sex=="m"){
+    if(mx[1]>=0.107){ ax[1] <- 0.330 }else{
+      ax[1] <- 0.045+2.684*mx[1]
+    } 
+  } else if(sex=="f"){
+    if(mx[1]>=0.107){ ax[1] <- 0.350 }else{
+      ax[1] <- 0.053+2.800*mx[1]
+    }  
+  }
+  
+  ## Coale y Demeny edades 1 a 4
+  if(sex=="m"){
+    if(mx[1]>=0.107){ ax[2] <- 1.352 }else{
+      ax[2] <- 1.651-2.816*mx[1]
+    } 
+  } else if(sex=="f"){
+    if(mx[1]>=0.107){ ax[2] <- 1.361 }else{
+      ax[2] <- 1.522-1.518*mx[1]
+    }  
+  }
+  
+  # Probabilidad de muerte
+  qx <- (n*mx)/(1+(n-ax)*mx)
+  qx[m] <- 1
+  
+  # Proba de sobrevivir
+  px <- 1-qx
+  
+  # l_x
+  lx <- 100000 * cumprod(c(1,px[-m]))
+  
+  # Defunciones
+  dx <- c(-diff(lx), lx[m])
+  
+  # Años persona vividos
+  Lx <- n* c(lx[-1], 0) + ax*dx
+  Lx[m] <- lx[m]/mx[m]
+  
+  # Años persona vividos acumulados
+  Tx <- rev(cumsum(rev(Lx)))
+  
+  # Esperanza de vida
+  ex <- Tx/lx
+  
+  # Guardamos en un data.table 
+  dt_resultado <- data.table(x, n, mx, ax, qx, px, lx, dx, Lx, Tx, ex)
+  
+# Le damos formato estético con kableExtra 
+  tabla_formateada <- kbl(
+    dt_resultado,
+    align = "ccccccccccc", 
+    col.names = c("x", "n", "m(x)", "a(x)", "q(x)", "p(x)", "l(x)", "d(x)", "L(x)", "T(x)", "e(x)"),
+    format = "latex",    
+    table.env = "table"
+  ) %>%
+  kable_styling(
+    latex_options = c("striped", "scale_down", "HOLD_position"),
+    full_width = FALSE,
+    position = "center",
+    font_size = 10
+  ) %>%
+  row_spec(0, bold = TRUE, color = "white", background = "#00406d")
+  
+  return(tabla_formateada)
+}
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+
+lt <- function(x, mx, Sexo="f", IMR=NA){
+  
+  # Asegurar que data.table estén disponibles
+  library(data.table)
+  
+  m <- length(x)
+  n <- c(diff(x), NA)  
+  
+  ax <- n/2    
+  
+  ## Coale y Demeny edades 0 a 1
+  if(Sexo=="m"){
+    if(mx[1]>=0.107){ ax[1] <- 0.330 }else{
+      ax[1] <- 0.045+2.684*mx[1]
+    } 
+  } else if(Sexo=="f"){
+    if(mx[1]>=0.107){ ax[1] <- 0.350 }else{
+      ax[1] <- 0.053+2.800*mx[1]
+    }  
+  }
+  
+  ## Coale y Demeny edades 1 a 4
+  if(Sexo=="m"){
+    if(mx[1]>=0.107){ ax[2] <- 1.352 }else{
+      ax[2] <- 1.651-2.816*mx[1]
+    } 
+  } else if(Sexo=="f"){
+    if(mx[1]>=0.107){ ax[2] <- 1.361 }else{
+      ax[2] <- 1.522-1.518*mx[1]
+    }  
+  }
+  
+  # Probabilidad de muerte
+  qx <- (n*mx)/(1+(n-ax)*mx)
+  qx[m] <- 1
+  
+  # Proba de sobrevivir
+  px <- 1-qx
+  
+  # l_x
+  lx <- 100000 * cumprod(c(1,px[-m]))
+  
+  # Defunciones
+  dx <- c(-diff(lx), lx[m])
+  
+  # Años persona vividos
+  Lx <- n* c(lx[-1], 0) + ax*dx
+  Lx[m] <- lx[m]/mx[m]
+  
+  # Años persona vividos acumulados
+  Tx <- rev(cumsum(rev(Lx)))
+  
+  # Esperanza de vida
+  ex <- Tx/lx
+  
+  # Guardamos en un data.table 
+  dt_resultado <- data.table(x, n, mx, ax, qx, px, lx, dx, Lx, Tx, ex)
+  return(dt_resultado)
+}
+```
+
+**Tabla de vida de población masculina en Chihuahua 2010**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|  
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltm_2010 <- lt_abr(
+  mh_x[Anio==2010, x],
+  mh_x[Anio==2010, mx],
+  sex = "m"
+  )
+ltm_2010
+```
+
+\newpage
+
+**Tabla de vida de población femenina en Chihuahua 2010**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltf_2010 <- lt_abr(
+  mm_x[Anio==2010, x],
+  mm_x[Anio==2010, mx]
+  )
+ltf_2010
+```
+
+**Tabla de vida de población masculina en Chihuahua 2019**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltm_2019 <- lt_abr(
+  mh_x[Anio==2019, x],
+  mh_x[Anio==2019, mx],
+  sex = "m"
+  )
+ltm_2019
+```
+
+\newpage
+
+**Tabla de vida de población femenina en Chihuahua 2019**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltf_2019 <- lt_abr(
+  mm_x[Anio==2019, x],
+  mm_x[Anio==2019, mx]
+  )
+ltf_2019
+```
+
+**Tabla de vida de población masculina en Chihuahua 2021**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltm_2021 <- lt_abr(
+  mh_x[Anio==2021, x],
+  mh_x[Anio==2021, mx],
+  sex = "m"
+  )
+ltm_2021
+```
+
+\newpage
+
+**Tabla de vida de población femenina en Chihuahua 2021**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+
+library(data.table)
+mh_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="m"]
+mm_x <- fread("data/csv/Tasas_Mortalidad_Chihuahua.csv")[Sexo=="f"]
+
+ltf_2021 <- lt_abr(
+  mm_x[Anio==2021, x],
+  mm_x[Anio==2021, mx]
+  )
+ltf_2021
+```
+
+## \color{->} 2.5 Tabla de esperanza de vida al nacer ![](images/bebe.png){height="1.5em"}
+
+La esperanza de vida en el nacimiento es una estimación estadística del número promedio de años que se espera que viva una persona desde su nacimiento, suponiendo que las tasas de mortalidad y los patrones de riesgo de su entorno se mantengan constantes a lo largo de su vida. Este supuesto hace que si se considera el nacimiento de un individuo durante un periodo de tiempo con condiciones desfavorables para la sobrevivencia, la esperanza de vida de dicho individuo se vea redicalmente afectada. El *Covid-19* podría considerarse una de esas condiciones, asi que veamos como se modificaron o mantuvieron las esperanza de vida durante los años que consideramos.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+
+library(data.table)
+library(kableExtra)
+
+m_2010 <- lt(
+  mh_x[Anio==2010, x],
+  mh_x[Anio==2010, mx],
+  Sexo = "m"
+  )
+m_2019 <- lt(
+  mh_x[Anio==2019, x],
+  mh_x[Anio==2019, mx],
+  Sexo = "m"
+  )
+m_2021 <- lt(
+  mh_x[Anio==2021, x],
+  mh_x[Anio==2021, mx],
+  Sexo = "m"
+  )
+f_2010 <- lt(
+  mm_x[Anio==2010, x],
+  mm_x[Anio==2010, mx]
+  )
+f_2019 <- lt(
+  mm_x[Anio==2019, x],
+  mm_x[Anio==2019, mx]
+  )
+f_2021 <- lt(
+  mm_x[Anio==2021, x],
+  mm_x[Anio==2021, mx]
+  )
+
+# Extraemos el dato de la esperanza de vida de los data.tables.
+ex0_m2010 <- m_2010[x == 0, ex]
+ex0_f2010 <- f_2010[x == 0, ex]
+ex0_m2019 <- m_2019[x == 0, ex]
+ex0_f2019 <- f_2019[x == 0, ex]
+ex0_m2021 <- m_2021[x == 0, ex] 
+ex0_f2021 <- f_2021[x == 0, ex]
+
+# Creamos el nuevo data.table
+resumen_ex0 <- data.table(
+  Año = c("2010", "2019", "2021"),
+  Hombres = round(c(ex0_m2010, ex0_m2019, ex0_m2021), 2),
+  Mujeres = round(c(ex0_f2010, ex0_f2019, ex0_f2021), 2)
+)
+
+# Estilizamos con kableExtra
+tabla_resumen_format <- kbl(
+  resumen_ex0,
+  align = "ccc", # Centrado para las 3 columnas
+  col.names = c("Año", "Esperanza de Vida Hombres ($e_0$)", "Esperanza de Vida Mujeres ($e_0$)"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d")
+
+tabla_resumen_format
+```
+
+Notemos que la esperanza de vida para un varón nacido en 2010 es considerablemente menor que en 2019 y 2021, esto debido a que como vimos en el primer análisis, en el año 2010 se alcanzó un record de muertes por homicidio en Chihuahua, y la esperanza de vida supone que se mantendran dichas cifras en homidicio, y por ende, se considera que un recién nacido vivirá relativamente poco en esas condiciones. Por otro lado, en 2019 y 2021 hay apenas una reducción de poco más de un año, que no es para tomarse a la ligera, pero considerando que se trata de una cifra en pandemia se puede considerar un cambio no apenas significativo, seguramente si se hubiera calculado la esperanza de vida al nacer en el 2020 habría otra reducción grande, ya que se supondría los niños nacidos en ese año vivirian con una enfermedad desconocido y sin cura por toda su vida.
+
+En el caso de una niña recién nacida, no se ve tan afectada su esperanza de vida dependiendo en que año nazca, nuevamente el valor en 2010 es pequeño seguramente por temas de inseguridad, pero no es tan pequeño como el de un niño previamente visto; ya que, como vimos al inicio el tema de homicidos afecto en menor medida a las mujeres. Por otro lado, su esperanza de vida luego de la aparición del *Covid-19* si baja (como es de esperarse), pero tampoco tiene una bajada abrupta.
+
+En conclusión de esta tabla, nos percatamos que la esperanza de vida al nacer de la mujer siempre estará por encima que la del hombre, esto ya que, la proporción de población por sexo es practimente la misma y el número de muertes de hombres siempre esta por encima del de mujeres, a excepción del último grupo de edades.
+
+# \color{->} Gráficas Relevantes ![](images/funcion.png){height="1.5em"}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+library(data.table)
+library(ggplot2)
+
+# 1. Agregamos las etiquetas de Año y Sexo a cada data.table original
+# (Usamos copy() para no modificar tus tablas originales por accidente)
+dt_m2010 <- copy(m_2010)[, `:=`(Año = "2010", Sexo = "Hombres")]
+dt_f2010 <- copy(f_2010)[, `:=`(Año = "2010", Sexo = "Mujeres")]
+
+dt_m2019 <- copy(m_2019)[, `:=`(Año = "2019", Sexo = "Hombres")]
+dt_f2019 <- copy(f_2019)[, `:=`(Año = "2019", Sexo = "Mujeres")]
+
+dt_m2021 <- copy(m_2021)[, `:=`(Año = "2021", Sexo = "Hombres")]
+dt_f2021 <- copy(f_2021)[, `:=`(Año = "2021", Sexo = "Mujeres")]
+
+dt_completo <- rbindlist(list(dt_m2010, dt_f2010, dt_m2019, dt_f2019, dt_m2021, dt_f2021))
+
+# 3. Creamos la gráfica con paneles separados (Facets)
+ggplot(dt_completo, aes(x = x, y = log(mx), color = Sexo)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1.2) +
+  # Esta es la magia: divide la salida en 3 columnas basadas en la variable 'Año'
+  facet_wrap(~ Año, nrow = 1) + 
+  scale_color_manual(values = c("Hombres" = "#00406d", "Mujeres" = "#e377c2")) + 
+  labs(
+    title = "Evolución de log(mx) por año",
+    subtitle = "Chihuahua",
+    x = "Edad (x)",
+    y = "Logaritmo de la tasa de mortalidad log(mx)",
+    color = "Sexo"
+  ) +
+  theme_bw(base_size = 12) + 
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5, color = "gray30"),
+    legend.position = "bottom",
+    strip.background = element_rect(fill = "#f0f0f0"), 
+    strip.text = element_text(face = "bold", size = 11) 
+  )
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+library(data.table)
+library(ggplot2)
+
+# 1. Agregamos las etiquetas de Año y Sexo a cada data.table original
+# (Usamos copy() para no modificar tus tablas originales por accidente)
+dt_m2010 <- copy(m_2010)[, `:=`(Año = "2010", Sexo = "Hombres")]
+dt_f2010 <- copy(f_2010)[, `:=`(Año = "2010", Sexo = "Mujeres")]
+
+dt_m2019 <- copy(m_2019)[, `:=`(Año = "2019", Sexo = "Hombres")]
+dt_f2019 <- copy(f_2019)[, `:=`(Año = "2019", Sexo = "Mujeres")]
+
+dt_m2021 <- copy(m_2021)[, `:=`(Año = "2021", Sexo = "Hombres")]
+dt_f2021 <- copy(f_2021)[, `:=`(Año = "2021", Sexo = "Mujeres")]
+
+dt_completo <- rbindlist(list(dt_m2010, dt_f2010, dt_m2019, dt_f2019, dt_m2021, dt_f2021))
+
+# 3. Creamos la gráfica con paneles separados (Facets)
+ggplot(dt_completo, aes(x = x, y = log(qx), color = Sexo)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1.2) +
+  # Esta es la magia: divide la salida en 3 columnas basadas en la variable 'Año'
+  facet_wrap(~ Año, nrow = 1) + 
+  scale_color_manual(values = c("Hombres" = "#00406d", "Mujeres" = "#e377c2")) + 
+  labs(
+    title = "Evolución de nqx por año",
+    subtitle = "Chihuahua",
+    x = "Edad (x)",
+    y = "Probabilidad de morir (qx)",
+    color = "Sexo"
+  ) +
+  theme_bw(base_size = 12) + 
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5, color = "gray30"),
+    legend.position = "bottom",
+    strip.background = element_rect(fill = "#f0f0f0"), 
+    strip.text = element_text(face = "bold", size = 11) 
+  )
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+library(data.table)
+library(ggplot2)
+
+# 1. Agregamos las etiquetas de Año y Sexo a cada data.table original
+# (Usamos copy() para no modificar tus tablas originales por accidente)
+dt_m2010 <- copy(m_2010)[, `:=`(Año = "2010", Sexo = "Hombres")]
+dt_f2010 <- copy(f_2010)[, `:=`(Año = "2010", Sexo = "Mujeres")]
+
+dt_m2019 <- copy(m_2019)[, `:=`(Año = "2019", Sexo = "Hombres")]
+dt_f2019 <- copy(f_2019)[, `:=`(Año = "2019", Sexo = "Mujeres")]
+
+dt_m2021 <- copy(m_2021)[, `:=`(Año = "2021", Sexo = "Hombres")]
+dt_f2021 <- copy(f_2021)[, `:=`(Año = "2021", Sexo = "Mujeres")]
+
+dt_completo <- rbindlist(list(dt_m2010, dt_f2010, dt_m2019, dt_f2019, dt_m2021, dt_f2021))
+
+# 3. Creamos la gráfica con paneles separados (Facets)
+ggplot(dt_completo, aes(x = x, y = lx, color = Sexo)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 1.2) +
+  facet_wrap(~ Año, nrow = 1) + 
+  scale_color_manual(values = c("Hombres" = "#00406d", "Mujeres" = "#e377c2")) + 
+  labs(
+    title = "Sobrevivientes a lo largo del tiempo",
+    subtitle = "Chihuahua",
+    x = "Edad (x)",
+    y = "Cantidad de sobrevivientes (lx)",
+    color = "Sexo"
+  ) +
+  theme_bw(base_size = 12) + 
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5, color = "gray30"),
+    legend.position = "bottom",
+    strip.background = element_rect(fill = "#f0f0f0"), 
+    strip.text = element_text(face = "bold", size = 11) 
+  )
+```
+
+
+```{r}
+#| include: false
+#| message: false
+#| warning: false
+#| 
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadoh_2010 <- lt(
+  mh_x[Anio==2010, x],
+  mh_x[Anio==2010, mx],
+  Sexo = "m"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadoh_2010[, sexo := "hombre"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadoh_2010, file = "data/csv/tabla_mortalidad_hombre_2010.csv")
+
+
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadom_2010 <- lt(
+  mm_x[Anio==2010, x],
+  mm_x[Anio==2010, mx],
+  Sexo = "f"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadom_2010[, sexo := "mujer"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadom_2010, file = "data/csv/tabla_mortalidad_mujer_2010.csv")
+
+
+
+
+
+
+
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadoh_2019 <- lt(
+  mh_x[Anio==2019, x],
+  mh_x[Anio==2019, mx],
+  Sexo = "m"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadoh_2019[, sexo := "hombre"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadoh_2019, file = "data/csv/tabla_mortalidad_hombre_2019.csv")
+
+
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadom_2019 <- lt(
+  mm_x[Anio==2019, x],
+  mm_x[Anio==2019, mx],
+  Sexo = "f"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadom_2019[, sexo := "mujer"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadom_2019, file = "data/csv/tabla_mortalidad_mujer_2019.csv")
+
+
+
+
+
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadoh_2021 <- lt(
+  mh_x[Anio==2021, x],
+  mh_x[Anio==2021, mx],
+  Sexo = "m"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadoh_2021[, sexo := "hombre"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadoh_2021, file = "data/csv/tabla_mortalidad_hombre_2021.csv")
+
+
+
+# Guardamos el resultado en una variable llamada 'resultado'
+resultadom_2021 <- lt(
+  mm_x[Anio==2021, x],
+  mm_x[Anio==2021, mx],
+  Sexo = "f"
+  )
+
+# 4. Agregamos la columna "sexo" con el valor "hombre" de forma eficiente
+# Al usar el operador := de data.table, se modifica el objeto en memoria directamente
+resultadom_2021[, sexo := "mujer"]
+
+# 5. Guardamos el data.table en un archivo .csv dentro de la carpeta 'data'
+# Usamos 'fwrite' de data.table que es extremadamente rápido y eficiente
+fwrite(resultadom_2021, file = "data/csv/tabla_mortalidad_mujer_2021.csv")
+```
+
+# \color{->} Causa Eliminada
+
+Como ya vimos en el análisis previo, los homicidios jugaron un papel muy importante en la mortalidad de la población de Chihuahua. Asi que, para cuantificar cuanto afecta esta causa de muerte haremos una revisión a la situación hipotetica en donde las personas no murieran por homicidios.
+
+Para los cálculos de Causa Eliminada usaremos el siguiente proceso partiendo de las tablas de vida ya obtenidas anteriormente. Para ver la construcción de las tablas de vida por Causa Eliminada, ver el documento **data/output/Causa_Eliminada_Chihuahua.xlsx**.
+
+## \color{->} Metodología Causa Eliminada
+
+Para la construcción de la tabla de vida con una causa de muerte eliminada ($i$), se utiliza el enfoque clásico de riesgos competitivos basado en el método de Chiang. A continuación se presentan las fórmulas utilizadas y su papel en el cálculo.
+
+### \color{->} i. Fracción de muertes debidas a la causa $i$ ($R_{x}$)
+
+Antes de eliminar la causa, es necesario remover se impacto específico dentro de la mortalidad general observada para cada grupo de edad en el intervalo $(x, x+n)$.
+
+$$R_{x} = \frac{_{n}D_{x}^{i}}{_{n}D_{x}}$$
+
+ Determina la proporción de fallecimientos exclusivamente de la causa $i$. $_{n}D_{x}^{i}$ representa las muertes observadas por la causa $i$ en el intervalo de edad, mientras que $_{n}D_{x}$ es el total de muertes por todas las causas en el mismo rango.
+
+### \color{->} ii. Probabilidad de sobrevivir eliminando la causa $i$ ($_{n}p_{x}^{-i}$)
+
+Asumiendo la independencia entre los riesgos de muerte, se calcula la nueva probabilidad de que una persona de edad exacta $x$ sobreviva al intervalo $(x, x+n)$ ante la ausencia de la causa $i$.
+
+$$_{n}p_{x}^{-i} = (_{n}p_{x})^{1 - R_{x}}$$
+
+Modifica la probabilidad de sobrevivir original ($_{n}p_{x}$) elevándola a una potencia menor a la unidad ($1 - R_{x}$), lo que genera una probabilidad de supervivencia modificada que siempre es mayor o igual a la original.
+
+### \color{->} iii. Nueva probabilidad de morir ($_{n}q_{x}^{-i}$)
+
+Una vez obtenida la probabilidad de sobrevivir modificada, se determina la probabilidad de fallecer en el intervalo de manera común .
+
+$$_{n}q_{x}^{-i} = 1 - _{n}p_{x}^{-i}$$
+
+### \color{->} iv. Ajuste de los factores ($_{n}a_{x}^{-i}$)
+
+Al modificar la estructura de la mortalidad, la distribución de las muertes dentro del propio intervalo de edad cambia. Para ajustar el tiempo promedio vivido en el intervalo por aquellos que fallecen debido a las causas restantes, se utiliza la aproximación de Chiang:
+
+$$_{n}a_{x}^{-i} = n + \left( R_X^{-1}\cdot \frac{_nq_x}{_nq_x^{-1}} \cdot (_na_x -n) \right)$$
+
+
+### \color{->} v. Reconstrucción de las funciones de la cohorte ($l_{x}^{-i}$ y $_{n}d_{x}^{-i}$)
+
+Una vez obtenidas las bases se calcula la tabla de mortalidad como se hace normalmente, se recalculan los componentes de la cohorte teórica partiendo de un radix de $l_{0} = 100,000$.
+
+$$ l_{x+n}^{-i} = l_{x}^{-i} \cdot _{n}p_{x}^{-i} $$
+
+$$ _{n}d_{x}^{-i} = l_{x}^{-i} - l_{x+n}^{-i} = l_{x}^{-i} \cdot _{n}q_{x}^{-i} $$
+
+
+### \color{->} vi. Años vividos ($_{n}L_{x}^{-i}$) y Esperanza de vida modificada ($e_{x}^{-i}$)
+
+Finalmente, se determina el tiempo total vivido por la cohorte.
+
+$$_{n}L_{x}^{-i} = n \cdot l_{x+n}^{-i} + (_{n}a_{x} \cdot _{n}d_{x}^{-i})$$
+
+$$ T_{x}^{-i} = \sum_{t=x}^{\omega} {_{n}L_{t}^{-i}} $$
+
+$$e_{x}^{-i} = \frac{T_{x}^{-i}}{l_{x}^{-i}}$$
+## \color{->} Resultados importantes de Causa Eliminada
+
+Para poder visualizar el gran cambio que habria en el escenario sin muertes, se presentaran a continuación algunos resultados que consideremos importantes.
+
+### \color{->} La diferencia en las probalidades de morir
+
+En este punto veremos contrastada la diferencia gráfica que hubo presente en el año 2019 en la población masculina de Chihuahua cuando analizamos la mortalidad considerando o no homicidios.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+# 1. Cargar los datos
+dt <- fread("data/csv/q_x-vs-q_xi.csv")
+
+
+probas_reales <- unique(dt$tipo)
+
+# 3. Graficar usando de forma dinámica esos nombres
+ggplot(dt, aes(x = edad, y = log(qx), color = tipo, group = tipo)) +
+  geom_line(linewidth = 1.2) +
+  geom_point() +
+  
+  # Al usar probas_reales[1] y [2], asignamos los colores directamente
+  # a lo que sea que venga escrito en el archivo sin fallar
+  scale_color_manual(values = setNames(
+    c("#00406d", "#a2e3ff"), 
+    c(probas_reales[1], probas_reales[2])
+  )) +
+  
+  labs(
+    title    = "Probabilidad de muerte Chihuahua 2019 (Hombres)",
+    x        = "Edad",
+    y        = "Probabilidad de muerte",
+    color    = "Series",
+    caption  = "Comparativa de la probabiidad de muerte con y sin homicidios"
+  ) +
+  theme_minimal()
+
+# Opcional: Guardarla directamente en tu carpeta de imágenes o reportes
+# ggsave("data/grafica_comparativa_qx.png", plot = grafica_mortalidad, width = 8, height = 5, dpi = 300)
+```
+
+La serie $q$ muestra las probalidades de morir contandos todas las causas, mientras que la serie $qi$ muestras las probabilidades de morir sin contar a los homicidios como causa de muerte.
+
+Podemos ver que practicamente no existe diferencia en los extremos de la gráfica, sin embargo, en el medio de esta, mas precisamente entre las edades 15 y 45; se logra observar un gran decremento cuando no se toman en cuenta los homicidios. Esto tienen mucho sentido considerando que ya habiamos visto que en general, esos grupos de edades eran más propensos a morir por homicidio.
+
+### \color{->} Esperanza de vida sin homicidios
+
+Ahora, para el mismo año 2019, veamos como se modificó la esperanza de vida al nacer cuando no tomamos en cuenta los homicidios.
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+
+library(data.table)
+library(kableExtra)
+
+# 1. Crear el data.table con los datos de la imagen
+resumen_ex0 <- data.table(
+  Escenario = c("Sin homicidios", "Con homicidios", "Diferencia"),
+  Hombres = c(71.09, 68.05, 3.04),
+  Mujeres = c(77.57, 76.71, 0.86)
+)
+
+# 2. Generar la tabla con el formato kableExtra solicitado
+tabla_resumen_format1 <- kbl(
+  resumen_ex0,
+  align = "ccc", 
+  col.names = c("Escenario", "Esperanza de Vida Hombres ($e_0$)", "Esperanza de Vida Mujeres ($e_0$)"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d") %>%
+# Extra: Le da énfasis en negrita a la última fila de resultados (el total/resta)
+row_spec(3, bold = TRUE)
+
+tabla_resumen_format1
+```
+
+Notemos que en ambos casos (tanto para hombres como para mujeres), hubo un aumento de esperanza de vida al nacer, sin embargo; para los hombres este incremento fue considerablemente mayor que para la población femenina. Esto se explica nuevamente gracias a nuestro análisis previo, pues vimos que la población masculina era bastante más propensa a la muerte por homicidios, por lo que; si no tomamos en cuenta dicha causa, la esperanza de vida para un recién nacido se vuelve más prometedora.
+
+
+Por otro lado, al inicio de este trabajo, vimos que el periodo con mayor impacto en la mortalidad por parte de los homicidios correspondia al periodo 2010 con creces, por lo que para contrastar aún más el como pueden afectar los homicidios a una población, realizaremos una tabla de esperanzas de vida para los tres periodos como la que se hizo previamente considerando todas las causas.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+# 1. Crear el data.table con los datos de la imagen
+resumen_ex0ce <- data.table(
+  Año = c("2010", "2019", "2021"),
+  Hombres = c(70.68, 71.09, 69.65),
+  Mujeres = c(76.58, 77.57, 75.51)
+)
+
+# 2. Generar la tabla con el formato kableExtra solicitado
+tabla_resumen_format2 <- kbl(
+  resumen_ex0ce,
+  align = "ccc", 
+  col.names = c("Año", "Esperanza de Vida Hombres ($e_0$)", "Esperanza de Vida Mujeres ($e_0$)"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d")  
+
+tabla_resumen_format2
+```
+
+Este resultado es aún más sorprendente, pues logramos ver un aumento de hasta $8.19$ años en la esperanza de vida de un recién nacido varón en el año 2010, esto nos dice que sin lugar a dudas este fue el peor año del periodo en cuanto a las muertes por homicidios y posiblemente la violencia en general. En cuanto a los años 2019 y 2021 también se obtuvieron incrementos pero estos siendo muy similares y no tan pronunciados tanto para hombres como mujeres, ya que la población femenina también alcanzó su incremento más alto en el año 2010, siendo este año el único en el cual hubo un aumento de más de un año (1.5 años).
+
+
+
+
+
+
+
+
+
+
+## Demostración de la Tasa Global de Fecundidad (TGF) de reemplazo
+
+En demografía, el nivel de reemplazo se define como la fecundidad mínima necesaria para que una población se mantenga numéricamente estable a largo plazo, es decir, sin crecimientos ni disminuciones. A continuación, se documenta el desarrollo analítico visto en clase que demuestra por qué este nivel se sitúa teóricamente en una Tasa Global de Fecundidad (TGF) de aproximadamente 2.1 hijos por mujer.
+
+### 1. Definición de los Indicadores
+
+$\alpha$ := Inicio del periodo reproductivo femenino
+$\beta$ := Final del periodo reproductivo femenino
+
+Para construir la demostración, se parte de las tres tasas fundamentales de reproducción y sus relaciones matemáticas:
+
+* **Tasa Neta de Reproducción (NRR):** Mide el número promedio de hijas que una cohorte de mujeres dejaría a lo largo de su vida reproductiva, tomando en cuenta la mortalidad desde el nacimiento hasta el fin del periodo fértil.
+* **Tasa Bruta de Reproducción (GRR):** Mide el número promedio de hijas que tendría una mujer si sobreviviera hasta el final de su periodo reproductivo.
+* **Tasa Global de Fecundidad (TGF):** Mide el número promedio de hijos que nacen por mujer a lo largo de su vida reproductiva.
+
+### 2. Desarrollo Analítico de las Fórmulas
+
+La relación entre la supervivencia y la reproducción de hijas se modela formalmente a través de la NRR, expresada como:
+
+$$NRR = \sum_{x=\alpha}^{\beta} {}_nf_{x}^{F} \cdot \frac{_{n}L_{x}^{F}}{l_{0}^{F}}$$
+
+Donde $_nf_{x}^{F}$ representa las tasas de fecundidad por edad específicas para los nacimientos femeninos, y $\frac{_{n}L_{x}^{F}}{l_{0}^{F}}$ representa la probabilidad de supervivencia de las mujeres en dichos intervalos. 
+
+Al aproximar este factor de supervivencia mediante la probabilidad promedio de sobrevivir de una mujer desde el nacimiento hasta la edad media de la maternidad (denotada como $p(A)$), la expresión se simplifica a la proporción de supervivencia por la suma de la fecundidad femenina:
+
+$$NRR = p(A) \cdot GRR$$
+
+De la relación anterior, se puede despejar directamente la Tasa Bruta de Reproducción ($GRR$), la cual se define estrictamente en función de las tasas de fecundidad de hijas de la siguiente manera:
+
+$$GRR = n \sum_{x=\alpha}^{\beta} {}_{n}f_{x}^{F} = \frac{NRR}{p(A)}$$
+
+Por definición, el umbral de reemplazo poblacional se alcanza cuando cada mujer es sustituida exactamente por una hija en la siguiente generación (es decir, la población se mantiene estacionaria). Esto nos da tres escenarios teóricos para evaluar la dinámica:
+
+* **$NRR > 1$:** La población se encuentra en crecimiento.
+* **$NRR = 1$:** Nivel de reemplazo estricto (población estacionaria).
+* **$NRR < 1$:** La población se encuentra en decrecimiento.
+
+Para transformar la medida de hijas ($GRR$) a la totalidad de hijos nacidos vivos ($TGF$), se introduce la Razón de Género al Nacer ($SRB$), que relaciona matemáticamente los nacimientos de ambos sexos mediante:
+
+$$TGF = n \sum_{x=\alpha}^{\beta} {}_{n}f_{x} = GRR \cdot (1 + SRB) = \frac{NRR}{p(A)} \cdot (1 + SRB)$$
+
+### 3. Sustitución de parámetros y solución
+
+Para calcular el valor numérico bajo condiciones demográficas estándar y estables, se fijan los siguientes supuestos observados internacionalmente:
+
+1.  **Razón de género al nacer ($SRB$):** Histórica y biológicamente se sitúa en torno a 105 niños por cada 100 niñas:
+    $$SRB = 1.05$$
+2.  **Probabilidad de supervivencia femenina ($p(A)$):** En poblaciones con condiciones de salud e higiene óptimas y baja mortalidad materna/infantil, cerca del $98\%$ de las mujeres sobreviven hasta el promedio de su edad reproductiva:
+    $$p(A) = 0.98$$
+3.  **Condición de reemplazo:** Se fuerza el escenario de estabilidad demográfica:
+    $$NRR = 1$$
+
+Sustituyendo estos parámetros en la ecuación general de la TGF, obtenemos el resultado analítico:
+
+$$TGF = \frac{1 \cdot (1 + 1.05)}{0.98} = \frac{2.05}{0.98} \approx 2.1$$
+
+
+### Conclusión
+
+El cálculo formal demuestra que la **TGF de reemplazo es igual a 2.1**. Este valor indica que para compensar la proporción natural de nacimientos masculinos (el $.05$ adicional debido al $SRB$) y la ligera pérdida de mujeres que no lograrán sobrevivir hasta el final de su periodo fértil (el divisor $.098$), una población necesita promediar $2.1$ hijos por mujer para garantizar el relevo generacional continuo.
+
+
+# \color{->} Gráfica de Tasas Para México y Canadá
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+library(R.utils)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+
+
+# Población total ----
+
+fec <- fread("data/csv/WPP2024_Fertility_by_Age5.csv.gz")
+
+pop <- fread("data/csv/WPP2024_PopulationByAge5GroupSex_Medium.csv.gz") 
+
+# 2. Filtrar por el código ISO de México ("MEX") y sincronizar tipos de datos
+fec_sel <- fec[LocID == 484 & Variant == "Medium"]
+pop_sel <- pop[LocID == 484 & Variant == "Medium"]
+
+fec_sel[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
+pop_sel[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
+
+# 3. Hacer el cruce nativo y seguro con data.table
+tgf <- merge(fec_sel, pop_sel[, .(Time, AgeGrpStart, PopFemale)], 
+             by = c("Time", "AgeGrpStart"), all.x = TRUE)
+
+# 4. Calcular la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
+tgf[, tef := (Births / PopFemale) * 1000]
+
+# 5. Graficar las tasas (Verás las curvas en forma de campana en el rango reproductivo 15-49)
+ggplot(data = tgf[AgeGrpStart >= 15 & AgeGrpStart <= 49], 
+       aes(x = AgeGrp, y = tef, group = Time, color = Time)) +
+  geom_line(alpha = 0.6) + 
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_gradient(low = "#06FE13", high = "#006847") +
+  geom_line(data = tgf[Time == 2024 & AgeGrpStart >= 15 & AgeGrpStart <= 49], aes(group = Time), 
+            color = "red", linetype = "dashed", linewidth = 0.8) + # Degradado azul elegante
+  labs(
+    title = "Tasas Específicas de Fecundidad en México",
+    subtitle = "Evolución histórica y proyecciones (Estructura por edad 15-49)",
+    x = "Grupo de Edad",
+    y = "Hijos por cada 1,000 mujeres (TEF)",
+    color = "Año:"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Tasa Global de Fecundidad ----
+
+
+tgf <- tgf[ , mc := AgeGrpStart + 2.5][ , mc_tef := mc*tef]
+
+#em <- tgf[ , .(em = sum(mc_tef)/sum(tef)), .(Time)]  
+em <- tgf[, .(em = sum(mc_tef, na.rm = TRUE) / sum(tef, na.rm = TRUE)), by = .(Time)]
+em <- em[is.finite(em)]
+setorder(em, Time)
+
+
+#plot(em$Time, em$em)
+
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+# Población total ----
+
+# 2. Filtrar por el código ISO de México ("MEX") y sincronizar tipos de datos
+fec_sel1 <- fec[LocID == 124 & Variant == "Medium"]
+pop_sel1 <- pop[LocID == 124 & Variant == "Medium"]
+
+fec_sel1[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
+pop_sel1[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
+
+# 3. Hacer el cruce nativo y seguro con data.table
+tgf1 <- merge(fec_sel1, pop_sel1[, .(Time, AgeGrpStart, PopFemale)], 
+             by = c("Time", "AgeGrpStart"), all.x = TRUE)
+
+# 4. Calcular la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
+tgf1[, tef := (Births / PopFemale) * 1000]
+
+# 5. Graficar las tasas (Verás las curvas en forma de campana en el rango reproductivo 15-49)
+ggplot(data = tgf1[AgeGrpStart >= 15 & AgeGrpStart <= 49], 
+       aes(x = AgeGrp, y = tef, group = Time, color = Time)) +
+  geom_line(alpha = 0.6) + 
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_gradient(low = "#ff0403", high = "#692102") +
+  geom_line(data = tgf1[Time == 2024 & AgeGrpStart >= 15 & AgeGrpStart <= 49], aes(group = Time), 
+            color = "black", linetype = "dashed", linewidth = 0.8) + # Degradado azul elegante
+  labs(
+    title = "Tasas Específicas de Fecundidad en Canadá",
+    subtitle = "Evolución histórica y proyecciones (Estructura por edad 15-49)",
+    x = "Grupo de Edad",
+    y = "Hijos por cada 1,000 mujeres (TEF)",
+    color = "Año:"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Tasa Global de Fecundidad ----
+
+
+tgf1 <- tgf1[ , mc := AgeGrpStart + 2.5][ , mc_tef := mc*tef]
+
+#em <- tgf[ , .(em = sum(mc_tef)/sum(tef)), .(Time)]  
+em1 <- tgf1[, .(em = sum(mc_tef, na.rm = TRUE) / sum(tef, na.rm = TRUE)), by = .(Time)]
+em1 <- em1[is.finite(em)]
+setorder(em, Time)
+
+
+#plot(em1$Time, em1$em)
+```
+
+
+
+
+
+
+
+# \color{->} 3. Conclusiones ![](images/resultados.png){height="1.5em"}
+
+Luego del análisis exhaustivo de la mortalidad en Chihuahua durante el periodo 2008-2023, podemos confirmar que la dinámica demográfica de la entidad se vió fuertemente condicionada por una convergencia crítica entre el perfil epidemiológico tradicional y factores externos de violencia que asotaron la región. Se concluye que, mientras las enfermedades crónico-degenerativas y la irrupción de la pandemia por COVID-19 en 2020 elevaron la tasa de mortalidad de forma generalizada, el homicidio actuó como un elemento distorsionador que impactó selectivamente a la población masculina joven, particularmente en los periodos críticos de 2010 y 2020. Esta disparidad de la mortalidad entre los géneros en las causas externas explica por qué la esperanza de vida masculina presenta una mayor vulnerabilidad y fluctuación ante crisis de seguridad, a diferencia de la femenina, que mantiene una tendencia más estable y resiliente hacia edades avanzadas, consolidando así un escenario donde el entorno fronterizo y la salud pública dictan de manera conjunta los riesgos de supervivencia en Chihuahua.
