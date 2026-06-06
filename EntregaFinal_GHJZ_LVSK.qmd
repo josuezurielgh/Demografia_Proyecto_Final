@@ -16,11 +16,16 @@ format:
         \usepackage{graphicx}
         \usepackage{xcolor}
         \usepackage{fancyhdr}
+        \usepackage{sectsty}
         \pagestyle{fancy}
         \fancyhf{}
         \fancyhead[L]{\includegraphics[height=1cm]{images/chihuahua_azulote.png}}
         \fancyhead[R]{\small\sffamily\itshape Demografia 9219 | GHJZ \& LVSK}
         \renewcommand{\headrulewidth}{0.4pt}
+        \definecolor{azulInstitucional}{HTML}{00406d}
+        \sectionfont{\color{azulInstitucional}}    
+        \subsectionfont{\color{azulInstitucional}} 
+        \subsubsectionfont{\color{azulInstitucional}}
         \makeatletter
         \makeatother
 editor: visual
@@ -28,7 +33,9 @@ editor: visual
 
 ![](images/chihuahua-01.jpg) \definecolor{->}{HTML}{00406d}
 
-# \color{->} 1. Comportamiento de la Mortalidad en Chihuahua ![](images/mortalidad.png){height="1.5em"}
+
+
+#  1. Comportamiento de la Mortalidad en Chihuahua ![](images/mortalidad.png){height="1.5em"}
 
 Cada uno de los 32 estados de la República Mexicana tiene diversas caracterisitcas que los vuelve interesantes para el estudio y análisis de los indicadores demográficos de su territorio; así que el estado de Chihuahua, no es la excepción, ya que cuenta con ciertos factores que resaltan en como afectan en la mortalidad de su población.
 
@@ -84,7 +91,7 @@ Esta gráfica es una gran herramienta auxiliar ya que nos da mucha información 
 
 El hecho de que haya solo dos años con crecimiento tan abrupto en el número de muertes, nos indica que en esos años sucedió algo atipico, que en caso del 2020 favorece nuestra hipotésis de la pandemia ya que concuerda con el periodo. Sin embargo, para asegurarnos que los factores propuestos en verdad sean los principales que afectan a la población en Chihuahua, habría que hacer un análisis por separado de cada uno para ver si siguen la tendencia de crecimiento visto en las defunciones en genereal, y por ende expliquen dicho comportamiento en los años antes mencionados.
 
-## \color{->} 1.1 El impacto de homicidios en la mortalidad ![](images/armas.png){height="1.5em"}
+##  1.1 El impacto de homicidios en la mortalidad ![](images/armas.png){height="1.5em"}
 
 El caso de los homicidios anuales siempre ha sido una estadistica preocupantemente relevante en las EDR de México; sin embargo, durante un periodo corto de tiempo centrado en el año 2010, se convirtió en una estadistica aún más impactante. La lucha contra el crimen organizado durante esa época llevó a un punto inquietante al Gobierno de México y la población mexicana, en el intento de erradicar grupos criminales, gran parte de la estadistica de muertes por homicido se le atribuye a esta razón.
 
@@ -189,7 +196,7 @@ datos_edad %>%
 
 En estas gráficas podemos apreciar que la forma en la que se distribuyen las edades de victimas por homicidio entre hombres y mujeres es muy parecida, enfatizamos que se parecen en forma; ya que, no podriamos decir que son muy parecidas en general porque las escalas del eje $y$ entre ambas gráficas es diferentes, esto por lo visto anteriormente entre la gran diferencia en cantidad de victimas por cada sexo. Dejando esto a un lado, es fácil ver que gran parte de las victimas por homicidio se concentran entre las edades 25 a 34 años para ambos sexos, también podemos notar que la proporción de mujeres fallecidas por homicidios de 0-14 años es mayor a la proporción de hombres que murireron por homicidio del mismo rango de edad. Todos estos factores contribuiran en la modificación de indicadores como la esperanza de vida y años-persona vividos que veremos más adelante y analizaremos al final de este documento.
 
-## \color{->} 1.2 El impacto de las enfermedades en la Mortalidad ![](images/virus.png){height="1.5em"}
+##  1.2 El impacto de las enfermedades en la Mortalidad ![](images/virus.png){height="1.5em"}
 
 En el caso de la Mortalidad por Enfermedades en Chihuahua en el periodo 2008-2023, los datos muestran que en los años 2008 a 2019 existe un crecimiento poco importante; ya que, es de esperarse que la cantidad de muertes por cualquier causa persistente en el tiempo (como son las enfermedades) aumente, esto debido a que si la población va en crecimiento, también la cantidad de personas que mueren lo hara (al menos en condiciones normales). Sin embargo, donde si se tienen cambios considerables a analizar, es lo que sucede en el periodo a partir de 2020, pues en estos años se presenta un crecimiento que supera a la tendencia que se estaba siguiendo en el periodo antes mencionado.
 
@@ -333,11 +340,11 @@ datos_enfermedad_edad %>%
 
 Nuevamente, existe cierto parecido en la forma de los histogramas, pero esta vez también se parecen en dimensiones, ya que si bien existe diferencia en el número de hombres y mujeres que mueren por enfermedad, no es tan marcado como en la causa de muerte homicidios; por ende, contamos con la misma escala en los ejes $y$ pero sigue existiendo diferencia de magnitud. Podemos apreciar que en el caso de mujeres, seis grupos de edad superan las 10,000 defunciones, mientras que para hombre lo hacen ocho grupos de edad, para los primeros grupos de edad de cada sexo, vemos una cantidad considerablemnte grande pero esperada de muertes. Para los hombres, a partir de ahi, se sigue un crecimiento creciente a excepción del penúltimo grupo donde baja un poco para volver a subir en el último, lo cual se púede considerar un comportamiento normal, mientras que para las mujeres, el crecimiento hasta el penúltimo grupo es creciente pero más bajo que para los hombres, es hasta el último grupo donde hay un crecimiento bastante diferencial que incluso supera el de cualquier grupo de los hombres; pero es de esperarse ya que, si el porcentaje de población masculina y femenina es practicamente el mismo, no existe gran diferencia entre el número de muertes por enfermedad entre sexos y las enfermedades son la principal causa de muerte representando casi el mismo porcentaje para ambos sexos, la cantidad de defunciones por esta razón se debe ver compensada en algún punto (siendo el último grupo en las mujeres), pero esto se espera que repercuta positivamente en la esperanza de vida femenina.
 
-# \color{->} 2. Tablas de vida ![](images/corazon.png){height="1.5em"}
+#  2. Tablas de vida ![](images/corazon.png){height="1.5em"}
 
 Una vez visto los principales factores que alteran la Mortalidad en la región, buscaremos realizar las tablas de vida para los años 2010,2019 y 2020. Las tablas de vida son un recurso muy importante por su versatilidad y comodidad para plasmar una cantidad enorme de información en un solo medio; sin embargo, no son fáciles de interpretar por lo mismo, asi que en esta parte del trabajo explicaremos el proceso para obtener una tabla de vida, y analizaremos los aspectos más relevantes que estas contengan.
 
-## \color{->} 2.1. Procesamiento de los datos ![](images/archivo.png){height="1.5em"}
+##  2.1. Procesamiento de los datos ![](images/archivo.png){height="1.5em"}
 
 Un censo es un recuento detallado de todos los individuos que componen una población, por lo que, es de vital importancia para múltiples recursos demográficos; en particular, para una *Tabla de Vida*. En México, contamos con un organismo que dentro de otras funciones, se encarga de la recopilación y publicación de los datos censales, dicho esto, nos ayudaremos de los censos poblacionales hechos por el INEGI en 2010 y 2020, y los consultaremos desde su sitio oficial.
 
@@ -347,7 +354,7 @@ Donde los términos $\omega$ corresponden a las proporciones de cada sexo:
 
 $$\omega_m = \frac{P_{\text{masculina original}}}{P_{\text{masculina original}} + P_{\text{femenina original}}}$$ Una vez obtenidos los datos de población total por sexo se busca obtener el valor de los años-persona vividos, que se interpretan como los años totales que contribuye una cohorte al total de años que se pueden vivir en un periodo determinado, para ello ocupamos dos cosas. Primero debemos obtener el valor que mide el tiempo que hubo entre los censos, pa esto debemos usar las fechas de los censos 2010 y 2020 y pasarlos a decimales mediante la fórmula: $$ Fecha=Año + \dfrac{(Mes-1)}{12}+\frac{Dia}{365} $$ Entonces obtenemos el valor absoluto de la diferencia de las fechas censales y lo llamamos $\Delta_t$, ahora calculamos las tasa $r$, con la siguiente fórmula: $$r = \frac{\ln\left(\frac{N_T}{N_0}\right)}{\Delta t}$$ Con estos datos, ahora podemos calcular los valores $APV$, usando la fórmula de crecimiento exponencial: $$ N(t)=N(0)\cdot exp(rt) $$ Pero modificandola como una proyección a mitad de año: $$ APV(T)=N(t)\cdot exp(\Delta_t\cdot(T-t)) $$ con $t$ la fecha del primer censo considerado y $T$ la mitad del año en el que se miden los $APV$. Para continuar con la construcción de las tablas de vida debemos nuevamente consultar la página oficial del INEGI en el apartado Estadísticas de Defunciones Registradas (EDR) para obtener el número de muertes totales para cada unos de los años (2010,2019,2021) por edad y sexo, pero esta vez buscamos las muertes por año de ocurrencia y no de registro. Una vez obtenidos los $_nAPV_x$ y $_nD_x$, solo queda hacer su cociente para tener las tasas especificas de mortalidad: $${}_nm_x=\dfrac{_nAPV_x}{_nD_x}$$ Estos valores ya se pueden usar para obtener una tabla de vida mediante el algoritmo usual. En nuestro caso la obtencion de los valores $_nm_x$ se puede ver a detalle en los archivos "*APV-R-Demografia-GHJZ-LVSK.xlsx*" y "*TasasMortalidad_Demografia_GHJZ-LVSK.xlsx*"
 
-## \color{->} 2.2 Fórmulas para la Tabla de Vida Abreviada ![](images/formula.png){height="1.5em"}
+##  2.2 Fórmulas para la Tabla de Vida Abreviada ![](images/formula.png){height="1.5em"}
 
 La tabla de vida es un cuadro estadístico que estudia la mortalidad en una cohorte hipotética de $l_0 = 100,000$ nacidos vivos para observar su extinción gradual bajo las tasas de mortalidad calculadas ($_{n}m_x$). Las fórmulas que se ocupan para su construcción son:
 
@@ -385,13 +392,13 @@ $$T_x = \sum_{i=x}^{\omega} {}_{n}L_i$$
 
 $$e_x = \frac{T_x}{l_x}$$
 
-## \color{->} 2.3 Diagrama de flujo de la construcción de la Tabla de vida ![](images/diagrama.png){height="1.5em"}
+##  2.3 Diagrama de flujo de la construcción de la Tabla de vida ![](images/diagrama.png){height="1.5em"}
 
 El proceso de construcción de una tabla de vida puede parecer tedioso y poco comprensible, es por eso que con este diagrama de flujo buscamos ilustrarlo de una mejor manera:
 
 ![](images/diagrama_tabla_vida.png){fig-align="center"}
 
-## \color{->} 2.4 Tablas de vida en R ![](images/tablavida.png){height="1.5em"}
+##  2.4 Tablas de vida en R ![](images/tablavida.png){height="1.5em"}
 
 A continuación se presentarán las tablas de vida hechas mediante $R$ para los años 2010, 2019 y 2021.
 
@@ -670,7 +677,7 @@ ltf_2021 <- lt_abr(
 ltf_2021
 ```
 
-## \color{->} 2.5 Tabla de esperanza de vida al nacer ![](images/bebe.png){height="1.5em"}
+##  2.5 Tabla de esperanza de vida al nacer ![](images/bebe.png){height="1.5em"}
 
 La esperanza de vida en el nacimiento es una estimación estadística del número promedio de años que se espera que viva una persona desde su nacimiento, suponiendo que las tasas de mortalidad y los patrones de riesgo de su entorno se mantengan constantes a lo largo de su vida. Este supuesto hace que si se considera el nacimiento de un individuo durante un periodo de tiempo con condiciones desfavorables para la sobrevivencia, la esperanza de vida de dicho individuo se vea redicalmente afectada. El *Covid-19* podría considerarse una de esas condiciones, asi que veamos como se modificaron o mantuvieron las esperanza de vida durante los años que consideramos.
 
@@ -752,7 +759,7 @@ En el caso de una niña recién nacida, no se ve tan afectada su esperanza de vi
 
 En conclusión de esta tabla, nos percatamos que la esperanza de vida al nacer de la mujer siempre estará por encima que la del hombre, esto ya que, la proporción de población por sexo es practimente la misma y el número de muertes de hombres siempre esta por encima del de mujeres, a excepción del último grupo de edades.
 
-# \color{->} Gráficas Relevantes ![](images/funcion.png){height="1.5em"}
+#  Gráficas Relevantes ![](images/funcion.png){height="1.5em"}
 
 ```{r}
 #| echo: false
@@ -1004,17 +1011,17 @@ resultadom_2021[, sexo := "mujer"]
 fwrite(resultadom_2021, file = "data/csv/tabla_mortalidad_mujer_2021.csv")
 ```
 
-# \color{->} Causa Eliminada
+#  Causa Eliminada
 
 Como ya vimos en el análisis previo, los homicidios jugaron un papel muy importante en la mortalidad de la población de Chihuahua. Asi que, para cuantificar cuanto afecta esta causa de muerte haremos una revisión a la situación hipotetica en donde las personas no murieran por homicidios.
 
 Para los cálculos de Causa Eliminada usaremos el siguiente proceso partiendo de las tablas de vida ya obtenidas anteriormente. Para ver la construcción de las tablas de vida por Causa Eliminada, ver el documento **data/output/Causa_Eliminada_Chihuahua.xlsx**.
 
-## \color{->} Metodología Causa Eliminada
+##  Metodología Causa Eliminada
 
 Para la construcción de la tabla de vida con una causa de muerte eliminada ($i$), se utiliza el enfoque clásico de riesgos competitivos basado en el método de Chiang. A continuación se presentan las fórmulas utilizadas y su papel en el cálculo.
 
-### \color{->} i. Fracción de muertes debidas a la causa $i$ ($R_{x}$)
+###  i. Fracción de muertes debidas a la causa $i$ ($R_{x}$)
 
 Antes de eliminar la causa, es necesario remover se impacto específico dentro de la mortalidad general observada para cada grupo de edad en el intervalo $(x, x+n)$.
 
@@ -1022,7 +1029,7 @@ $$R_{x} = \frac{_{n}D_{x}^{i}}{_{n}D_{x}}$$
 
  Determina la proporción de fallecimientos exclusivamente de la causa $i$. $_{n}D_{x}^{i}$ representa las muertes observadas por la causa $i$ en el intervalo de edad, mientras que $_{n}D_{x}$ es el total de muertes por todas las causas en el mismo rango.
 
-### \color{->} ii. Probabilidad de sobrevivir eliminando la causa $i$ ($_{n}p_{x}^{-i}$)
+###  ii. Probabilidad de sobrevivir eliminando la causa $i$ ($_{n}p_{x}^{-i}$)
 
 Asumiendo la independencia entre los riesgos de muerte, se calcula la nueva probabilidad de que una persona de edad exacta $x$ sobreviva al intervalo $(x, x+n)$ ante la ausencia de la causa $i$.
 
@@ -1030,20 +1037,20 @@ $$_{n}p_{x}^{-i} = (_{n}p_{x})^{1 - R_{x}}$$
 
 Modifica la probabilidad de sobrevivir original ($_{n}p_{x}$) elevándola a una potencia menor a la unidad ($1 - R_{x}$), lo que genera una probabilidad de supervivencia modificada que siempre es mayor o igual a la original.
 
-### \color{->} iii. Nueva probabilidad de morir ($_{n}q_{x}^{-i}$)
+###  iii. Nueva probabilidad de morir ($_{n}q_{x}^{-i}$)
 
 Una vez obtenida la probabilidad de sobrevivir modificada, se determina la probabilidad de fallecer en el intervalo de manera común .
 
 $$_{n}q_{x}^{-i} = 1 - _{n}p_{x}^{-i}$$
 
-### \color{->} iv. Ajuste de los factores ($_{n}a_{x}^{-i}$)
+###  iv. Ajuste de los factores ($_{n}a_{x}^{-i}$)
 
 Al modificar la estructura de la mortalidad, la distribución de las muertes dentro del propio intervalo de edad cambia. Para ajustar el tiempo promedio vivido en el intervalo por aquellos que fallecen debido a las causas restantes, se utiliza la aproximación de Chiang:
 
 $$_{n}a_{x}^{-i} = n + \left( R_X^{-1}\cdot \frac{_nq_x}{_nq_x^{-1}} \cdot (_na_x -n) \right)$$
 
 
-### \color{->} v. Reconstrucción de las funciones de la cohorte ($l_{x}^{-i}$ y $_{n}d_{x}^{-i}$)
+###  v. Reconstrucción de las funciones de la cohorte ($l_{x}^{-i}$ y $_{n}d_{x}^{-i}$)
 
 Una vez obtenidas las bases se calcula la tabla de mortalidad como se hace normalmente, se recalculan los componentes de la cohorte teórica partiendo de un radix de $l_{0} = 100,000$.
 
@@ -1052,7 +1059,7 @@ $$ l_{x+n}^{-i} = l_{x}^{-i} \cdot _{n}p_{x}^{-i} $$
 $$ _{n}d_{x}^{-i} = l_{x}^{-i} - l_{x+n}^{-i} = l_{x}^{-i} \cdot _{n}q_{x}^{-i} $$
 
 
-### \color{->} vi. Años vividos ($_{n}L_{x}^{-i}$) y Esperanza de vida modificada ($e_{x}^{-i}$)
+###  vi. Años vividos ($_{n}L_{x}^{-i}$) y Esperanza de vida modificada ($e_{x}^{-i}$)
 
 Finalmente, se determina el tiempo total vivido por la cohorte.
 
@@ -1061,11 +1068,13 @@ $$_{n}L_{x}^{-i} = n \cdot l_{x+n}^{-i} + (_{n}a_{x} \cdot _{n}d_{x}^{-i})$$
 $$ T_{x}^{-i} = \sum_{t=x}^{\omega} {_{n}L_{t}^{-i}} $$
 
 $$e_{x}^{-i} = \frac{T_{x}^{-i}}{l_{x}^{-i}}$$
-## \color{->} Resultados importantes de Causa Eliminada
+
+##  Resultados importantes de Causa Eliminada
 
 Para poder visualizar el gran cambio que habria en el escenario sin muertes, se presentaran a continuación algunos resultados que consideremos importantes.
 
-### \color{->} La diferencia en las probalidades de morir
+
+###  La diferencia en las probalidades de morir
 
 En este punto veremos contrastada la diferencia gráfica que hubo presente en el año 2019 en la población masculina de Chihuahua cuando analizamos la mortalidad considerando o no homicidios.
 
@@ -1109,7 +1118,7 @@ La serie $q$ muestra las probalidades de morir contandos todas las causas, mient
 
 Podemos ver que practicamente no existe diferencia en los extremos de la gráfica, sin embargo, en el medio de esta, mas precisamente entre las edades 15 y 45; se logra observar un gran decremento cuando no se toman en cuenta los homicidios. Esto tienen mucho sentido considerando que ya habiamos visto que en general, esos grupos de edades eran más propensos a morir por homicidio.
 
-### \color{->} Esperanza de vida sin homicidios
+###  Esperanza de vida sin homicidios
 
 Ahora, para el mismo año 2019, veamos como se modificó la esperanza de vida al nacer cuando no tomamos en cuenta los homicidios.
 ```{r}
@@ -1191,19 +1200,81 @@ tabla_resumen_format2
 Este resultado es aún más sorprendente, pues logramos ver un aumento de hasta $8.19$ años en la esperanza de vida de un recién nacido varón en el año 2010, esto nos dice que sin lugar a dudas este fue el peor año del periodo en cuanto a las muertes por homicidios y posiblemente la violencia en general. En cuanto a los años 2019 y 2021 también se obtuvieron incrementos pero estos siendo muy similares y no tan pronunciados tanto para hombres como mujeres, ya que la población femenina también alcanzó su incremento más alto en el año 2010, siendo este año el único en el cual hubo un aumento de más de un año (1.5 años).
 
 
+#  Fecundidad
+
+Otra medida demográfica clave es la fecundidad, esta, se refiere a la manifestación real de la reproducción en una entidad a través de los nacidos vivos. Así como ya hicimos un breve análisis de la mortalidad en Chihuahua, ahora veremos la otra cara de la moneda viendo la fecundidad en esta entidad y como se ha modificado a través de los años.
+
+##  Indicadores Globales y Generales
+
+### 1. Tasa Bruta de Natalidad (TBN)
+Mide la frecuencia con la que ocurren los nacimientos dentro de una población total durante un período determinado (usualmente un año).
+
+**Fórmula:**
+    $$TBN = \frac{B}{P} \times 1,000$$
+**Componentes:**
+    $B$: Número total de nacimientos vivos en el año.
+    $P$: Población total a mitad del año.
+Esta medida no toma en cuenta la estructura por edad ni sexo de la población, por lo que puede verse afectada por la distribución de edades en una entidad.
+
+### 2. Tasa General de Fecundidad (TGFec)
+Refina la TBN al relacionar los nacimientos únicamente con el grupo de población que realmente está teoricamente en posibilidad de reproducirse: las mujeres en edad fértil.
+
+**Fórmula:**
+  $$TGFec = \frac{B}{W_{15-49}} \times 1,000$$
+**Componentes:**
+  $B$: Número total de nacimientos vivos.
+    $W_{15-49}$: Población femenina en edad fértil (convencionalmente de 15 a 49 años).
 
 
 
+## Indicadores Específicos y de Reemplazo
 
 
+
+### 3. Tasas Específicas de Fecundidad por Edad (TEFE)
+Miden la frecuencia de los nacimientos desagregados por grupos quinquenales de edad de las madres. Permiten identificar a qué edades prefieren tener hijos las mujeres.
+
+**Fórmula para un grupo de edad $x$ a $x+4$:**
+  $$TEFE_{x, x+4} = \frac{B_{x, x+4}}{W_{x, x+4}} \times 1,000$$
+**Componentes:**
+    $B_{x, x+4}$: Nacimientos de madres en el rango de edad específico.
+    $W_{x, x+4}$: Población femenina en ese mismo rango de edad.
+Es vital para medir fenómenos como el *embarazo adolescente* (grupo de 15 a 19 años).
+
+### 4. Tasa Global de Fecundidad (TGF)
+Es el indicador estrella de la fecundidad. Expresa el número promedio de hijos que tendría una mujer si durante su vida reproductiva experimentara las tasas de fecundidad por edad vigentes en el año de estudio.
+
+**Fórmula:**
+  $$TGF = 5 \times \sum \left( \frac{TEFE_{x, x+4}}{1,000} \right)$$
+**Interpretación:** Se multiplica por 5 porque los datos se agrupan en periodos de 5 años. 
+**Nivel de Reemplazo:** Un valor de **2.1 hijos por mujer** se considera el umbral necesario para que una población se reemplace a sí misma en el tiempo sin necesidad de migración (Más adelante veremos porque).
+
+
+## Indicadores de Reproducción
+
+### 5. Tasa Bruta de Reproducción (TBR)
+Es similar a la TGF, pero restringe el análisis únicamente a los nacimientos de **hijas (mujeres)**, que serán las futuras madres de la población.
+
+**Fórmula:**
+  $$TBR = TGF \times \left( \frac{B_{femeninos}}{B_{totales}} \right)$$
+**Nota:** Asume que ninguna mujer muere antes de terminar su periodo reproductivo.
+
+### 6. Tasa Neta de Reproducción (TNR)
+Es el indicador de reproducción más exacto, ya que corrige a la TBR incorporando el factor de la **mortalidad femenina**. Mide el número promedio de hijas que dejará una mujer tras pasar por su periodo reproductivo, tomando en cuenta el riesgo de morir antes de cumplir los 49 años.
+
+**Interpretación:**
+    $\text{TNR} = 1$: La población de mujeres se está reemplazando exactamente a sí misma.
+    $\text{TNR} > 1$: La población tiende a crecer.
+    $\text{TNR} < 1$: La población tiende a decrecer a largo plazo.
+**Resumen Demográfico:** Mientras que la **TBN** da una idea del crecimiento anual del país, la **TGF** es la que realmente nos dice si las familias están cambiando sus patrones reproductivos de fondo y si la sociedad camina hacia un envejecimiento demográfico.
 
 
 
 ## Demostración de la Tasa Global de Fecundidad (TGF) de reemplazo
 
-En demografía, el nivel de reemplazo se define como la fecundidad mínima necesaria para que una población se mantenga numéricamente estable a largo plazo, es decir, sin crecimientos ni disminuciones. A continuación, se documenta el desarrollo analítico visto en clase que demuestra por qué este nivel se sitúa teóricamente en una Tasa Global de Fecundidad (TGF) de aproximadamente 2.1 hijos por mujer.
+Como ya vimos, en demografía, el nivel de reemplazo se define como la fecundidad mínima necesaria para que una población se mantenga numéricamente estable a largo plazo, es decir, sin crecimientos ni disminuciones. A continuación, se documenta el desarrollo analítico visto en clase que demuestra por qué este nivel se sitúa teóricamente en una Tasa Global de Fecundidad (TGF) de aproximadamente 2.1 hijos por mujer.
 
-### 1. Definición de los Indicadores
+###  1. Definición de los Indicadores
 
 $\alpha$ := Inicio del periodo reproductivo femenino
 $\beta$ := Final del periodo reproductivo femenino
@@ -1214,7 +1285,7 @@ Para construir la demostración, se parte de las tres tasas fundamentales de rep
 * **Tasa Bruta de Reproducción (GRR):** Mide el número promedio de hijas que tendría una mujer si sobreviviera hasta el final de su periodo reproductivo.
 * **Tasa Global de Fecundidad (TGF):** Mide el número promedio de hijos que nacen por mujer a lo largo de su vida reproductiva.
 
-### 2. Desarrollo Analítico de las Fórmulas
+###  2. Desarrollo Analítico de las Fórmulas
 
 La relación entre la supervivencia y la reproducción de hijas se modela formalmente a través de la NRR, expresada como:
 
@@ -1256,14 +1327,16 @@ Sustituyendo estos parámetros en la ecuación general de la TGF, obtenemos el r
 $$TGF = \frac{1 \cdot (1 + 1.05)}{0.98} = \frac{2.05}{0.98} \approx 2.1$$
 
 
-### Conclusión
+###  Conclusión
 
 El cálculo formal demuestra que la **TGF de reemplazo es igual a 2.1**. Este valor indica que para compensar la proporción natural de nacimientos masculinos (el $.05$ adicional debido al $SRB$) y la ligera pérdida de mujeres que no lograrán sobrevivir hasta el final de su periodo fértil (el divisor $.098$), una población necesita promediar $2.1$ hijos por mujer para garantizar el relevo generacional continuo.
 
 
-# \color{->} Gráfica de Tasas Para México y Canadá
 
 
+#  Tasas TGF x (1000) Para México y Canadá
+
+Antes de comenzar a analizar la fecundidad de Chihuahua veamos un rápido análisis de la Tasa Global de Fecundidad en México en general, contrastandola con otro país como lo es Canadá.
 
 ```{r}
 #| echo: false
@@ -1276,34 +1349,33 @@ library(ggplot2)
 library(data.table)
 
 
-# Población total ----
+# Población total
 
-fec <- fread("data/csv/WPP2024_Fertility_by_Age5.csv.gz")
+fec <- fread("https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Fertility_by_Age5.csv.gz")
 
-pop <- fread("data/csv/WPP2024_PopulationByAge5GroupSex_Medium.csv.gz") 
+pop <- fread("https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationByAge5GroupSex_Medium.csv.gz") 
 
-# 2. Filtrar por el código ISO de México ("MEX") y sincronizar tipos de datos
+# Filtramos por el código ISO de México ("MEX") 
 fec_sel <- fec[LocID == 484 & Variant == "Medium"]
 pop_sel <- pop[LocID == 484 & Variant == "Medium"]
 
 fec_sel[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
 pop_sel[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
 
-# 3. Hacer el cruce nativo y seguro con data.table
 tgf <- merge(fec_sel, pop_sel[, .(Time, AgeGrpStart, PopFemale)], 
              by = c("Time", "AgeGrpStart"), all.x = TRUE)
 
-# 4. Calcular la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
+# Calculamos la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
 tgf[, tef := (Births / PopFemale) * 1000]
 
-# 5. Graficar las tasas (Verás las curvas en forma de campana en el rango reproductivo 15-49)
+# Graficamos las tasas 
 ggplot(data = tgf[AgeGrpStart >= 15 & AgeGrpStart <= 49], 
        aes(x = AgeGrp, y = tef, group = Time, color = Time)) +
   geom_line(alpha = 0.6) + 
   geom_point(alpha = 0.4, size = 1) +
   scale_color_gradient(low = "#06FE13", high = "#006847") +
   geom_line(data = tgf[Time == 2024 & AgeGrpStart >= 15 & AgeGrpStart <= 49], aes(group = Time), 
-            color = "red", linetype = "dashed", linewidth = 0.8) + # Degradado azul elegante
+            color = "red", linetype = "dashed", linewidth = 0.8) + 
   labs(
     title = "Tasas Específicas de Fecundidad en México",
     subtitle = "Evolución histórica y proyecciones (Estructura por edad 15-49)",
@@ -1313,8 +1385,9 @@ ggplot(data = tgf[AgeGrpStart >= 15 & AgeGrpStart <= 49],
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# Tasa Global de Fecundidad ----
 
+
+# Tasa Global de Fecundidad 
 
 tgf <- tgf[ , mc := AgeGrpStart + 2.5][ , mc_tef := mc*tef]
 
@@ -1327,37 +1400,35 @@ setorder(em, Time)
 #plot(em$Time, em$em)
 
 ```
-
+Notemos que logramos apreciar el gran decremento de nacimientos por cada 1000 mujeres a través de los años hasta llegar a 2024 (la linea roja punteada), notando que a partir de esa fecha se comienza a tener una tendendia hacia el decremento de nacimientos en mujeres adolescentes y adultos jovenes y aumentando los nacimientos en mujeres adultas hasta los 40 años.
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
 #| 
-# Población total ----
 
-# 2. Filtrar por el código ISO de México ("MEX") y sincronizar tipos de datos
+# Filtramos por el código ISO de Canada ("CAN")
 fec_sel1 <- fec[LocID == 124 & Variant == "Medium"]
 pop_sel1 <- pop[LocID == 124 & Variant == "Medium"]
 
 fec_sel1[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
 pop_sel1[, `:=`(Time = as.numeric(Time), AgeGrpStart = as.numeric(AgeGrpStart))]
 
-# 3. Hacer el cruce nativo y seguro con data.table
 tgf1 <- merge(fec_sel1, pop_sel1[, .(Time, AgeGrpStart, PopFemale)], 
              by = c("Time", "AgeGrpStart"), all.x = TRUE)
 
-# 4. Calcular la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
+# Calculamos la verdadera Tasa Específica de Fecundidad (Nacimientos / Mujeres * 1000)
 tgf1[, tef := (Births / PopFemale) * 1000]
 
-# 5. Graficar las tasas (Verás las curvas en forma de campana en el rango reproductivo 15-49)
+# Graficamos las tasas 
 ggplot(data = tgf1[AgeGrpStart >= 15 & AgeGrpStart <= 49], 
        aes(x = AgeGrp, y = tef, group = Time, color = Time)) +
   geom_line(alpha = 0.6) + 
   geom_point(alpha = 0.4, size = 1) +
   scale_color_gradient(low = "#ff0403", high = "#692102") +
   geom_line(data = tgf1[Time == 2024 & AgeGrpStart >= 15 & AgeGrpStart <= 49], aes(group = Time), 
-            color = "black", linetype = "dashed", linewidth = 0.8) + # Degradado azul elegante
+            color = "black", linetype = "dashed", linewidth = 0.8) + 
   labs(
     title = "Tasas Específicas de Fecundidad en Canadá",
     subtitle = "Evolución histórica y proyecciones (Estructura por edad 15-49)",
@@ -1367,8 +1438,8 @@ ggplot(data = tgf1[AgeGrpStart >= 15 & AgeGrpStart <= 49],
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# Tasa Global de Fecundidad ----
 
+# Tasa Global de Fecundidad 
 
 tgf1 <- tgf1[ , mc := AgeGrpStart + 2.5][ , mc_tef := mc*tef]
 
@@ -1380,13 +1451,298 @@ setorder(em, Time)
 
 #plot(em1$Time, em1$em)
 ```
+Por otro lado, para Canadá podemos apreciar una gráfica más caotica, pues en lugar de un decremento constante a través de los años podemos notar periodos de bajada abrupta en los nacimientos en mujeres pasados los 30, para volver a estabilizarse en una gráfica triangular con pico en los nacimientos entre los 30-34 años según las proyecciones.
+
+La principal diferencia entre gráficas es que para México a partir de 2024 esta mucho más presente los nacimientos en mujeres de 15-29 años de edad, a diferencia de Canadá que "compensa" todos esos nacimientos con nacimientos en mujeres de 30-34 años de edad. Esto podría explicarse ya que al Canadá ser un país más desarrollado que México, las mujeres busquen una estabilización economica y social previo al inicio de su vida reproductiva. Esto a su vez, nos da una idea de nuestra entidad Chihuahua, pues al no encontrarse en los estados más urbanizados en México, esperariamos tasas de fecundidad por encima de la media, estando por arriba de $2.1$ superando la cantidad de reemplazo.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+em_clean <- em[Time >= 1950 & Time <= 2100] # Rango estándar de las perspectivas de la ONU
+
+ggplot(data = em_clean, aes(x = Time, y = em)) +
+  # Línea de tendencia principal
+  geom_line(color = "#006847", linewidth = 1.2) +
+  
+  # Puntos para resaltar los años
+  geom_point(aes(color = Time), size = 1.5, alpha = 0.7) +
+  scale_color_gradient(low = "#06FE13", high = "#006847", guide = "none") +
+  
+  # Línea vertical de referencia para el año 2024
+  geom_vline(xintercept = 2024, linetype = "dashed", color = "black", linewidth = 0.8) +
+  annotate("text", x = 2026, y = min(em_clean$em) + 0.5, 
+           label = "Año 2024\n(Año Base)", color = "black", hjust = 0, size = 3) +
+  
+  labs(
+    title = "Edad Media a la Fecundidad en México",
+    subtitle = "Evolución histórica y proyecciones (1950 - 2100)",
+    x = "Año",
+    y = "Edad Promedio de las Madres (Años)",
+    caption = "Fuente: Cálculos propios con datos de la ONU (WPP 2024)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, color = "#111111"),
+    plot.subtitle = element_text(margin = margin(b = 10), color = "#555555"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "#cccccc")
+  )
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+em_clean1 <- em1[Time >= 1950 & Time <= 2100] # Rango estándar de las perspectivas de la ONU
+
+ggplot(data = em_clean1, aes(x = Time, y = em)) +
+  # Línea de tendencia principal
+  geom_line(color = "#692102", linewidth = 1.2) +
+  
+  # Puntos para resaltar los años
+  geom_point(aes(color = Time), size = 1.5, alpha = 0.7) +
+  scale_color_gradient(low = "#ff0403", high = "#692102", guide = "none") +
+  
+  # Línea vertical de referencia para el año 2024
+  geom_vline(xintercept = 2024, linetype = "dashed", color = "black", linewidth = 0.8) +
+  annotate("text", x = 2026, y = min(em_clean$em) + 0.5, 
+           label = "Año 2024\n(Año Base)", color = "black", hjust = 0, size = 3) +
+  
+  labs(
+    title = "Edad Media a la Fecundidad en Canadá",
+    subtitle = "Evolución histórica y proyecciones (1950 - 2100)",
+    x = "Año",
+    y = "Edad Promedio de las Madres (Años)",
+    caption = "Fuente: Cálculos propios con datos de la ONU (WPP 2024)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, color = "#111111"),
+    plot.subtitle = element_text(margin = margin(b = 10), color = "#555555"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "#cccccc")
+  )
+```
+Estas dos últimas gráficas, dejan más claro los puntos ya hablados viendo notablemente la diferencia de edad promedio de una madre en Canadá 2024(aprox. 31.5) y en México en el mismo año (aprox. 26.8), notando que en el futuro esta edad aumente para México, mientras que para Canadá se estabilizara aproximadamente en la edad que ya esta, reforzando la idea de diferencia de desarrollo entre ambas Naciones.
 
 
+#  Tasas de Fecundidad Chihuahua
+
+Ahora veamos los resultados obtenidos sobre el análisis de las tasas de fecundidad de Chihuahua, dichos resultados y cálculos se pueden ver a detalle en el documento *"data/xlsx/TasasDeFecundidad_Chihuahua_2010_2019.xlsx"*.
+
+## Gráfica de TEFE's
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+df_fecundidad <- data.table(
+  Grupo_Edad = rep(c("15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49"), 2),
+  Pais = c(rep("Chihuahua 2010", 7), rep("Chihuahua 2019", 7)),
+  Tasa = c(
+    0.0891, 0.1338, 0.1134, 0.0735, 0.0350, 0.0090, 0.0013,
+    0.0822, 0.1299, 0.1246, 0.0726, 0.0334, 0.0072, 0.0010
+  )
+)
+
+# Graficamos
+ggplot(data = df_fecundidad, aes(x = Grupo_Edad, y = Tasa, group = Pais, color = Pais)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("Chihuahua 2010" = "#3a86c8", "Chihuahua 2019" = "#e67e22")) +
+  scale_y_continuous(
+    labels = scales::number_format(accuracy = 0.0001), 
+    breaks = seq(0, 0.1400, by = 0.0200),
+    limits = c(0, 0.1450)
+  ) +
+  labs(
+    title = "Tasas Específicas de Fecundidad por Grupos de Edad",
+    subtitle = "Comparativa: Chihuahua 2010 vs. Chihuahua 2019",
+    x = "Grupo de Edad",
+    y = "Hijos por mujer (f_x)",
+    color = "País:"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    legend.position = "bottom",
+    axis.line.x = element_line(color = "#cccccc")
+  )
+```
+Esta gráfica de Tasas Específicas de Fecundidad por Edad (TEFE), nos permite observar que a pesar de tratarse de años previos a 2024 se nota esa tendencia de crecimiento para edades para mujeres pasando los 20 y el decremento de mujeres jovenes, aunque dicha tendencia sea muy ligera.
+
+## TGF
+
+En cuanto a las tasas globales de fecundidad obtuvimos:
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+datos7 <- data.frame(
+  Variable_Eje = c("TGF"), 
+  Columna_1 = c(2.28),           
+  Columna_2 = c(2.25)              
+)
+
+tabla_resumen_format <- kbl(
+  datos7,
+  align = "ccc",
+  col.names = c("Tasa", "Chihuahua 2010", "Chihuahua 2019"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d")
+
+tabla_resumen_format
+```
 
 
+## TBR
+
+En cuanto a las tasas brutas de reproducción obtuvimos:
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+datos8 <- data.frame(
+  Variable_Eje = c("TBR"), 
+  Columna_1 = c(1.1102),           
+  Columna_2 = c(1.0996)              
+)
+
+tabla_resumen_format <- kbl(
+  datos8,
+  align = "ccc",
+  col.names = c("Tasa", "Chihuahua 2010", "Chihuahua 2019"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d")
+
+tabla_resumen_format
+```
 
 
+## TNR 
 
-# \color{->} 3. Conclusiones ![](images/resultados.png){height="1.5em"}
+En cuanto a las tasas netas de reproducción obtuvimos:
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+datos8 <- data.frame(
+  Variable_Eje = c("TNR"), 
+  Columna_1 = c(1.0736),           
+  Columna_2 = c(1.0651)              
+)
+
+tabla_resumen_format <- kbl(
+  datos8,
+  align = "ccc",
+  col.names = c("Tasa", "Chihuahua 2010", "Chihuahua 2019"),
+  format = "latex",
+  table.env = "table",
+  escape = FALSE 
+) %>%
+kable_styling(
+  latex_options = c("striped", "HOLD_position", "scale_down"), 
+  full_width = FALSE,
+  position = "center",
+  font_size = 14 
+) %>%
+row_spec(0, bold = TRUE, color = "white", background = "#00406d")
+
+tabla_resumen_format
+```
+
+
+## Gráfica para visualizar
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#|
+df_tasas <- data.table(
+  Pais = rep(c("Chihuahua 2019", "Chihuahua 2010"), each = 3),
+  Indicador = rep(c("TBR", "TNR", "TGF"), 2),
+  Valor = c(
+    1.100, 1.065, 2.250,
+    1.110, 1.074, 2.280
+  )
+)
+
+ggplot(data = df_tasas, aes(x = Pais, y = Valor, fill = Indicador)) +
+  geom_col(position = position_dodge(width = 0.85), width = 0.8) +
+  
+  geom_text(
+    aes(label = scales::number(Valor, accuracy = 0.001)),
+    position = position_dodge(width = 0.85),
+    vjust = -0.5, 
+    size = 3.5,
+    fontface = "bold"
+  ) +
+  
+  scale_fill_manual(values = c(
+    "TBR" = "#3a86c8",           # Azul original
+    "TNR" = "#e67e22",           # Naranja original
+    "TGF" = "#00406d"            # Azul obscuro institucional para contrastar
+  )) +
+  
+  # Ajustes de los límites del eje Y para dar espacio a los textos superiores
+  scale_y_continuous(
+    labels = scales::number_format(accuracy = 0.001),
+    breaks = seq(0, 2.500, by = 0.250),
+    limits = c(0, 2.500)
+  ) +
+  
+  labs(
+    title = "Comparativa de Indicadores de Fecundidad y Reproducción",
+    subtitle = "Chhuahua 2019 vs. Chihuahua 2010 (TBR, TNR y TGF)",
+    x = "Entidad",
+    y = "Valor del Indicador",
+    fill = "Indicador:"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(), # Elimina rejilla vertical
+    legend.position = "bottom",
+    axis.line.x = element_line(color = "#cccccc")
+  )
+```
+En esta gráfica podemos apreciar que practicamente no hubo cambios en Chihuahua respecto a los años, pudiendo concluir que la reproducción se ha mantenido estable durante el tiempo.
+
+#  3. Conclusiones ![](images/resultados.png){height="1.5em"}
 
 Luego del análisis exhaustivo de la mortalidad en Chihuahua durante el periodo 2008-2023, podemos confirmar que la dinámica demográfica de la entidad se vió fuertemente condicionada por una convergencia crítica entre el perfil epidemiológico tradicional y factores externos de violencia que asotaron la región. Se concluye que, mientras las enfermedades crónico-degenerativas y la irrupción de la pandemia por COVID-19 en 2020 elevaron la tasa de mortalidad de forma generalizada, el homicidio actuó como un elemento distorsionador que impactó selectivamente a la población masculina joven, particularmente en los periodos críticos de 2010 y 2020. Esta disparidad de la mortalidad entre los géneros en las causas externas explica por qué la esperanza de vida masculina presenta una mayor vulnerabilidad y fluctuación ante crisis de seguridad, a diferencia de la femenina, que mantiene una tendencia más estable y resiliente hacia edades avanzadas, consolidando así un escenario donde el entorno fronterizo y la salud pública dictan de manera conjunta los riesgos de supervivencia en Chihuahua.
+
+También confirmamos el fuerte impacto que tienen los homicidios en un estado fronterizo con tanta violencia, viendo que la esperanza de vida es más prometedora si estas muertes violentas no se dieran.
+
+Finalmente, vimos que al no ser una entidad de México tan urbanizada, el promedio de hijos por mujer se encuentra por encima de la media, y el fenomeno de la fecundida no se ha visto tan modificado en los últimos años como en zonas con mayor desarrollo socioeconomico.
